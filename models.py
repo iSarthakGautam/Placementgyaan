@@ -4,10 +4,10 @@ db = SQLAlchemy()
 
 
 class Student(db.Model):
-  #student_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-  name = db.Column(db.String, nullable=False, unique=True)
+  id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+  name = db.Column(db.String, nullable=False)
   password = db.Column(db.String, nullable=False)
-  roll_number = db.Column(db.String, primary_key=True)
+  roll_number = db.Column(db.String, unique=True)
   Linkedin_url = db.Column(db.String)
   Age = db.Column(db.Integer)
   Bio = db.Column(db.String)
@@ -15,10 +15,11 @@ class Student(db.Model):
   qualification = db.Column(db.String)
   tests_attempted = db.Column(db.String)
   current_status = db.Column(db.String)
+  email = db.Column(db.String, unique=True)
 
 
-class admin(db.Model):
-  admin_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+class Admin(db.Model):
+  id = db.Column(db.Integer, primary_key=True, autoincrement=True)
   password = db.Column(db.String, nullable=False)
 
 
@@ -54,3 +55,8 @@ class experience(db.Model):
   experience_title = db.Column(db.String, nullable=False)
   roll_number = db.Column(db.Integer)
   url_or_blog = db.Column(db.String)
+
+
+class Notification(db.Model):
+  notification_id = db.Column(db.Integer, primary_key=True)
+  notification_message = db.Column(db.String)
