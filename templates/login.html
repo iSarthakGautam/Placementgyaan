@@ -1,13 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login Page</title>
+<style>
+  body {
+    background-color: #e6ffff;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  img {
+    border-radius: 10%;
+  }
+  .login-container {
+    display: flex;
+    align-items: center;
+    width: 80%;
+    max-width: 1200px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+  }
+
+  .login-image {
+    flex: 1;
+    padding: 40px;
+    background-size: cover;
+    background-position: center;
+    text-align:center;
+  }
+
+  .login-form {
+    flex: 1;
+    padding: 40px;
+    background-color: white;
+    text-align:center;
+  }
+
+  .login-form h1 {
+    margin-bottom: 20px;
+    font-family: 'Kaushan Script', cursive;
+  }
+
+  .login-form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    background-color: #e6ffff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease; /* Adding transition effect */
+  }
+
+  .login-form input:focus::placeholder {
+    transform: translateY(-10px);
+    font-size: 10px;
+  }
+  .login-form button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+</style>
 </head>
 <body>
-  <h3>Hello world!!!</h3>
-  <div>Welcome.</div>
+  <div class="login-container">
+    <div class="login-image">
+      <img src="../static/image/login_img.png" alt="placement_image" width="100%" height="600px">
+    </div>
+    <div class="login-form">
+      <h1>Hi Student<br>Login</h1>
+      <form>
+        <input type="email" placeholder="Email" required>
+        <input type="password" placeholder="Password" required>
+        <button type="submit">Login</button>
+      </form>
+      <br>
+      <a href="" >New User? sign up</a>
+      <br><br><br><br><br><br<br><br><br>
+      <p style="text-align:right;"><a href="" >Admin</a></p>
+      
+    </div>
+  </div>
 </body>
 </html>
