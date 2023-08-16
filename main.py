@@ -41,6 +41,12 @@ api.add_resource(Login, "/api/login")
 api.add_resource(SignUp, "/api/signup")
 api.add_resource(Dashboard, "/api/dashboard")
 api.add_resource(AdminLogin, "/api/admin_login")
+api.add_resource(Student_Profile, "/api/profile/<email>")
+api.add_resource(Jobs_module, "/api/jobs", "/api/admin/jobs")
+api.add_resource(Workshop_module, "/api/workshops", "/api/admin/workshops")
+api.add_resource(Change_password_student, "/api/change_password")
+api.add_resource(Change_password_admin, "/api/admin/change_password")
+api.add_resource(student_connect, "/api/connect")
 
 if __name__ == '__main__':
   app.run(debug=False, port='3000', host='0.0.0.0')

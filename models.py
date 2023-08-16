@@ -16,7 +16,7 @@ class Student(db.Model):
   tests_attempted = db.Column(db.String)
   current_status = db.Column(db.String)
   email = db.Column(db.String, unique=True)
-
+  image_binary_code=db.Column(db.String)
 
 class Admin(db.Model):
   id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -40,6 +40,7 @@ class jobs(db.Model):
                              nullable=False)  # to be converted to list
   min_qualification = db.Column(db.String,
                                 nullable=False)  # to be converted to list
+  apply_link=db.Column(db.String)
 
 
 class Workshop(db.Model):
@@ -47,6 +48,7 @@ class Workshop(db.Model):
   workshop_title = db.Column(db.String, nullable=False)
   workshop_description = db.Column(db.String, nullable=False)
   workshop_registration_link = db.Column(db.String, nullable=False)
+  workshop_date= db.Column(db.String, nullable=False)
 
 
 class experience(db.Model):
