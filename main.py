@@ -12,9 +12,11 @@ jwt = JWTManager(app)
 
 with app.app_context():
   db.create_all()  # Create the database tables
-  a = Admin(password="abcd")
-  db.session.add(a)
-  db.session.commit()
+  data = Admin.query.all()
+  if len(data) == 0:
+    a = Admin(password="abcd")
+    db.session.add(a)
+    db.session.commit()
 
 
 def get_users():
@@ -43,10 +45,11 @@ api.add_resource(Dashboard, "/api/dashboard")
 api.add_resource(AdminLogin, "/api/admin_login")
 api.add_resource(Student_Profile, "/api/profile/<email>")
 api.add_resource(Jobs_module, "/api/jobs", "/api/admin/jobs")
-api.add_resource(Workshop_module, "/api/workshops", "/api/admin/workshops")
+api.add_resource(Workshop_module, "/api/workshops", "/api/admin/workshop")
 api.add_resource(Change_password_student, "/api/change_password")
 api.add_resource(Change_password_admin, "/api/admin/change_password")
 api.add_resource(student_connect, "/api/connect")
+api.add_resource(Test_module, "/api/admin/test")
 
 if __name__ == '__main__':
   app.run(debug=False, port='3000', host='0.0.0.0')
