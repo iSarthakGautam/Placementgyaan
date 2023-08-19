@@ -7,6 +7,9 @@ from flask_jwt_extended import JWTManager
 
 app = Flask(__name__)
 app.config.from_object(Config)
+app.jinja_options['variable_start_string'] = '[['
+app.jinja_options['variable_end_string'] = ']]'
+
 db.init_app(app)
 jwt = JWTManager(app)
 
@@ -49,7 +52,10 @@ api.add_resource(Workshop_module, "/api/workshops", "/api/admin/workshop")
 api.add_resource(Change_password_student, "/api/change_password")
 api.add_resource(Change_password_admin, "/api/admin/change_password")
 api.add_resource(student_connect, "/api/connect")
-api.add_resource(Test_module, "/api/admin/test")
+api.add_resource(Test_module, "/api/admin/test", "/api/test")
+api.add_resource(Experience_module, "/api/admin/experience")
+api.add_resource(Past_test_module, "/api/student/past_test")
+api.add_resource(Student_shared_Experience_module, "/api/student/experiences")
 
 if __name__ == '__main__':
   app.run(debug=False, port='3000', host='0.0.0.0')

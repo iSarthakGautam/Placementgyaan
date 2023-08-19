@@ -46,6 +46,22 @@ Test_module_parser.add_argument('deadline')
 Test_module_parser.add_argument('assesment_id')
 Test_module_parser.add_argument('time_limit_seconds')
 
+Experience_module_parser = reqparse.RequestParser()
+Experience_module_parser.add_argument('experience_type')
+Experience_module_parser.add_argument('experience_title')
+Experience_module_parser.add_argument('experience_description')
+Experience_module_parser.add_argument('roll_number')
+Experience_module_parser.add_argument('experience_id')
+Experience_module_parser.add_argument('email')
+
+
+pyq_module_parser = reqparse.RequestParser()
+pyq_module_parser.add_argument('test_id')
+pyq_module_parser.add_argument('paper_name')
+pyq_module_parser.add_argument('paper_description')
+pyq_module_parser.add_argument('paper_pdf_link')
+pyq_module_parser.add_argument('user_email')
+
 # decorator for verifying the JWT
 # def jwt_required(f):
 #     @wraps(f)
@@ -294,6 +310,7 @@ class Workshop_module(Resource):
     db.session.commit()
     return {"message": "Workshop deleted successfully"}, 200
 
+
 # @jwt_required()
 
   def put(self):
@@ -374,6 +391,7 @@ class student_connect(Resource):
 
 class Test_module(Resource):
 
+  @jwt_required()
   def get(self):
     data = Assesment.query.all()
     if len(data) == 0:
@@ -388,6 +406,7 @@ class Test_module(Resource):
       data_list.append(test_details)
     return {"message": "Success", "tests": data_list}, 200
 
+  @jwt_required()
   def post(self):
     args = Test_module_parser.parse_args()
     if args["assesment_name"] == "" or args["assesment_type"] == "" or args[
@@ -403,7 +422,7 @@ class Test_module(Resource):
       return {"message": "Assement already their. Recheck form link"}, 200
 
     a = Assesment(assesment_type=args["assesment_type"],
-                  assesment_name=args["assesment_type"],
+                  assesment_name=args["assesment_name"],
                   assesment_link=args["assesment_link"],
                   deadline=args["deadline"],
                   time_limit_seconds=args["time_limit_seconds"])
@@ -413,6 +432,7 @@ class Test_module(Resource):
 
     return {"message": "Test Added Success"}, 201
 
+  @jwt_required()
   def delete(Resource):
     args = Test_module_parser.parse_args()
     data = Assesment.query.filter_by(assesment_id=int(args["assesment_id"]))
@@ -422,15 +442,18 @@ class Test_module(Resource):
     db.session.commit()
     return {"message": "Test deleted successfully"}, 200
 
+  @jwt_required()
   def put(Resource):
+    args = Test_module_parser.parse_args()
     if args["assesment_name"] == "" or args["assesment_type"] == "" or args[
-        "assesment_link"] == "" or args["assesment_id"]:
+        "assesment_link"] == "" or args["assesment_id"] == 0:
       return {
         "message":
         "Fields: assesment_name, assesment_type, assesment_link, can't be empty"
       }, 400
 
-    data = Assesment.query.filter_by(assesment_id=int(args["assesment_id"]))
+    data = Assesment.query.filter_by(
+      assesment_id=int(args["assesment_id"])).first()
 
     if data is None:
       return {"message": "Assesment id doesn't exist"}, 404
@@ -456,3 +479,245 @@ class Test_module(Resource):
       ]
       data_list.append(test_details)
     return {"message": "Success", "tests": data_list},
+
+
+class Experience_module(Resource):
+
+  def get(self):
+    data = experience.query.all()
+    Experiences = []
+    if len(data) == 0:
+      return {"message": "No experiences available"}, 200
+    else:
+      for i in data:
+        exp_details = [
+          i.experience_id, i.experience_type, i.experience_title,
+          i.url_or_blog, i.roll_number
+        ]
+        Experiences.append(exp_details)
+
+    return {"messeage": "success", "Experiences": Experiences}
+
+  def post(self):
+
+    args = Experience_module_parser.parse_args()
+
+    if args["experience_type"] not in ["video", "blog"]:
+      return {"message": "Type must be of video or audio type"}, 400
+
+    if args["experience_title"] == "" or args["experience_description"] == "":
+      return {
+        "message":
+        "It should be of video or audio type and title and description should not be empty"
+      }, 400
+
+    a = experience(experience_type=args["experience_type"],
+                   experience_title=args["experience_title"],
+                   roll_number=args["roll_number"],
+                   url_or_blog=args["experience_description"])
+
+    db.session.add(a)
+    db.session.commit()
+    return {"message": "Expereince Added Successfully"}, 200
+
+  def delete(self):
+    args = Experience_module_parser.parse_args()
+    data = experience.query.filter_by(experience_id=args["experience_id"])
+
+    if data.first() is None:
+      return {"message": "Experience Doesn't exist"}, 404
+
+    data.delete()
+    db.session.commit()
+    return {"message": "Experience deleted"}, 200
+
+  def put(self):
+    args = Experience_module_parser.parse_args()
+    if args["experience_type"] not in ["video", "blog"]:
+      return {"message": "Type must be of video or audio type"}, 400
+
+    if args["experience_title"] == "" or args["experience_description"] == "":
+      return {
+        "message":
+        "It should be of video or audio type and title and description should not be empty"
+      }, 400
+    data = experience.query.get(int(args['experience_id']))
+
+    if data is None:
+      return {"message": "Experience not found"}, 404
+
+    data.experience_type, data.experience_title, data.roll_number, data.url_or_blog = args[
+      "experience_type"], args["experience_title"], args["roll_number"], args[
+        "experience_description"]
+
+    db.session.commit()
+
+    return {
+      "messeage": "Expereince Update Successfully",
+    }, 200
+
+
+class Past_test_module(Resource):
+
+  @jwt_required()
+  def get(self):
+    data = Past_test.query.all()
+    if len(data) == 0:
+      return {"message": "No tests available"}, 200
+
+    data_list = []
+    for i in data:
+      test_details = [
+        i.test_id, i.test_name, i.test_description, i.pdf_link, i.owner_email
+      ]
+      data_list.append(test_details)
+    return {"message": "Success", "tests": data_list}, 200
+
+  @jwt_required()
+  def post(self):
+    args = pyq_module_parser.parse_args()
+    if args["paper_name"] == "" or args["paper_description"] == "" or args[
+        "paper_pdf_link"] == "" or args["user_email"] == "":
+      return {
+        "message":
+        "Fields: paper_name, paper_description, paper_pdf_link, user_email can't be empty"
+      }, 400
+
+    data_old = Past_test.query.filter_by(
+      pdf_link=args["paper_pdf_link"]).first()
+    if data_old is not None:
+      return {"message": "Assement already their. Recheck drive link"}, 200
+
+    a = Past_test(
+      test_name=args["paper_name"],
+      test_description=args["paper_description"],
+      pdf_link=args["paper_pdf_link"],
+      owner_email=args["user_email"],
+    )
+
+    db.session.add(a)
+    db.session.commit()
+
+    return {"message": "Test Added Success"}, 201
+
+  @jwt_required()
+  def delete(Resource):
+    args = pyq_module_parser.parse_args()
+    data = Past_test.query.filter_by(test_id=args['test_id'])
+    if data.first() and data.first().owner_email==args["user_email"]:
+      data.delete()
+      db.session.commit()
+      return {"message": "Test deleted successfully"}, 200
+    else:
+      return {"message": "Test doesn't exist or email doesn't match"}, 404
+
+  @jwt_required()
+  def put(Resource):
+    args = Test_module_parser.parse_args()
+    if args["paper_name"] == "" or args["paper_description"] == "" or args[
+        "paper_pdf_link"] == "" or args["user_email"] == "":
+      return {
+        "message":
+        "Fields: paper_name, paper_description, paper_pdf_link, user_email can't be empty"
+      }, 400
+
+    data = Past_test.query.filter_by(test_id=int(args["test_id"])).first()
+
+    if data is None:
+      return {"message": "Test id doesn't exist"}, 404
+
+    data.test_name, data.test_description, data.pdf_link, data.owner_email = args[
+      "paper_name"], args["paper_description"], args["paper_pdf_link"], args[
+        "user_email"]
+
+    db.session.commit()
+    data = Assesment.query.all()
+    if len(data) == 0:
+      return {"message": "No tests available"}, 200
+
+    data_list = []
+    for i in data:
+      test_details = [
+        i.assesment_id, i.assesment_type, i.participants, i.assesment_name,
+        i.assesment_link, i.deadline, i.time_limit_seconds
+      ]
+      data_list.append(test_details)
+    return {"message": "Success", "tests": data_list},
+
+
+
+
+class Student_shared_Experience_module(Resource):
+  @jwt_required()
+  def get(self):
+    data = Student_only_experience.query.all()
+    Experiences = []
+    if len(data) == 0:
+      return {"message": "No experiences available"}, 200
+    else:
+      for i in data:
+        exp_details = [
+          i.experience_id, i.experience_type, i.experience_title,
+          i.url_or_blog, i.email
+        ]
+        Experiences.append(exp_details)
+
+    return {"messeage": "success", "Experiences": Experiences}
+  @jwt_required()
+  def post(self):
+
+    args = Experience_module_parser.parse_args()
+
+    if args["experience_type"] not in ["video", "blog"]:
+      return {"message": "Type must be of video or audio type"}, 400
+
+    if args["experience_title"] == "" or args["experience_description"] == "":
+      return {
+        "message":
+        "It should be of video or audio type and title and description should not be empty"
+      }, 400
+
+    a = Student_only_experience(experience_type=args["experience_type"],
+                   experience_title=args["experience_title"],
+                   email=args["email"],
+                   url_or_blog=args["experience_description"])
+
+    db.session.add(a)
+    db.session.commit()
+    return {"message": "Expereince Added Successfully"}, 200
+  @jwt_required()
+  def delete(self):
+    args = Experience_module_parser.parse_args()
+    data = Student_only_experience.query.filter_by(experience_id=args["experience_id"])
+
+    if data.first() is None:
+      return {"message": "Experience Doesn't exist"}, 404
+  
+    data.delete()
+    db.session.commit()
+    return {"message": "Experience deleted"}, 200
+  @jwt_required()
+  def put(self):
+    args = Experience_module_parser.parse_args()
+    if args["experience_type"] not in ["video", "blog"]:
+      return {"message": "Type must be of video or audio type"}, 400
+
+    if args["experience_title"] == "" or args["experience_description"] == "":
+      return {
+        "message":
+        "It should be of video or audio type and title and description should not be empty"
+      }, 400
+    data = Student_only_experience.query.get(int(args['experience_id']))
+
+    if data is None:
+      return {"message": "Experience not found"}, 404
+
+    data.experience_type, data.experience_title, data.roll_number, data.url_or_blog = args[
+      "experience_type"], args["experience_title"], args["roll_number"], args[
+        "experience_description"]
+
+    db.session.commit()
+
+    return {
+      "messeage": "Expereince Update Successfully",
+    }, 200

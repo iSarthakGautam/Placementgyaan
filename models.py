@@ -31,7 +31,8 @@ class Assesment(db.Model):
   assesment_name = db.Column(db.String, nullable=False)
   assesment_link = db.Column(db.String, nullable=False, unique=True)
   deadline = db.Column(db.String)
-  time_limit_seconds=db.Column(db.Integer)
+  time_limit_seconds = db.Column(db.Integer)
+
 
 class jobs(db.Model):
   Job_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -62,7 +63,23 @@ class experience(db.Model):
   roll_number = db.Column(db.Integer)
   url_or_blog = db.Column(db.String)
 
+class Student_only_experience(db.Model):
+  #this db maintains a separate copy for student only data base
+  experience_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+  experience_type = db.Column(db.String, nullable=False)
+  experience_title = db.Column(db.String, nullable=False)
+  email = db.Column(db.Integer)
+  url_or_blog = db.Column(db.String)
+
 
 class Notification(db.Model):
   notification_id = db.Column(db.Integer, primary_key=True)
   notification_message = db.Column(db.String)
+
+
+class Past_test(db.Model):
+  test_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+  test_name = db.Column(db.String)
+  test_description = db.Column(db.String)
+  pdf_link = db.Column(db.String)
+  owner_email = db.Column(db.String)
