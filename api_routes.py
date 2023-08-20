@@ -54,7 +54,6 @@ Experience_module_parser.add_argument('roll_number')
 Experience_module_parser.add_argument('experience_id')
 Experience_module_parser.add_argument('email')
 
-
 pyq_module_parser = reqparse.RequestParser()
 pyq_module_parser.add_argument('test_id')
 pyq_module_parser.add_argument('paper_name')
@@ -62,38 +61,16 @@ pyq_module_parser.add_argument('paper_description')
 pyq_module_parser.add_argument('paper_pdf_link')
 pyq_module_parser.add_argument('user_email')
 
-# decorator for verifying the JWT
-# def jwt_required(f):
-#     @wraps(f)
-#     def decorated(*args, **kwargs):
-#         token = None
-#         # jwt is passed in the request header
-#         if 'x-access-token' in request.headers:
-#             token = request.headers['x-access-token']
-#         # return 401 if token is not passed
-#         if not token:
-#             return jsonify({'message' : 'Token is missing !!'}), 401
 
-#         try:
-#             # decoding the payload to fetch the stored details
-#             data = jwt.decode(token, app.config['SECRET_KEY'])
-#             current_user = Student.query.filter_by(email = data['email']).first()
-#         except:
-#             return jsonify({
-#                 'message' : 'Token is invalid !!'
-#             }), 401
-#         # returns the current logged in users context to the routes
-#         return  f(current_user, *args, **kwargs)
-
-
-#     return decorated
 class Login(Resource):
 
   def post(self):
     authenticated = False
     args = login_or_signup_parser.parse_args()
     data = Student.query.filter_by(email=args["Email"]).first()
-
+    print(data)
+    if data is None :
+      return {"message":"No user exisit in database"},404
     if data.email == args["Email"] and data.password == args["Password"]:
       authenticated = True
 
@@ -135,7 +112,6 @@ class Dashboard(Resource):
   @jwt_required()
   def get(self):
     data = Notification.query.all()
-    print("debug")
     notification_list = []
     for i in data:
       notification_list.append(i.notification_message)
@@ -603,8 +579,9 @@ class Past_test_module(Resource):
   @jwt_required()
   def delete(Resource):
     args = pyq_module_parser.parse_args()
-    data = Past_test.query.filter_by(test_id=args['test_id'])
-    if data.first() and data.first().owner_email==args["user_email"]:
+    data = Past_test.query.filter_by(test_id=int(args['test_id']))
+    print(data)
+    if data.first() and data.first().owner_email == args["user_email"]:
       data.delete()
       db.session.commit()
       return {"message": "Test deleted successfully"}, 200
@@ -645,9 +622,8 @@ class Past_test_module(Resource):
     return {"message": "Success", "tests": data_list},
 
 
-
-
 class Student_shared_Experience_module(Resource):
+
   @jwt_required()
   def get(self):
     data = Student_only_experience.query.all()
@@ -662,7 +638,8 @@ class Student_shared_Experience_module(Resource):
         ]
         Experiences.append(exp_details)
 
-    return {"messeage": "success", "Experiences": Experiences}
+    return {"message": "success", "Experiences": Experiences}
+
   @jwt_required()
   def post(self):
 
@@ -678,24 +655,27 @@ class Student_shared_Experience_module(Resource):
       }, 400
 
     a = Student_only_experience(experience_type=args["experience_type"],
-                   experience_title=args["experience_title"],
-                   email=args["email"],
-                   url_or_blog=args["experience_description"])
+                                experience_title=args["experience_title"],
+                                email=args["email"],
+                                url_or_blog=args["experience_description"])
 
     db.session.add(a)
     db.session.commit()
-    return {"message": "Expereince Added Successfully"}, 200
+    return {"message": "Experience Added Successfully"}, 201
+
   @jwt_required()
   def delete(self):
     args = Experience_module_parser.parse_args()
-    data = Student_only_experience.query.filter_by(experience_id=args["experience_id"])
+    data = Student_only_experience.query.filter_by(
+      experience_id=args["experience_id"])
 
     if data.first() is None:
       return {"message": "Experience Doesn't exist"}, 404
-  
+
     data.delete()
     db.session.commit()
     return {"message": "Experience deleted"}, 200
+
   @jwt_required()
   def put(self):
     args = Experience_module_parser.parse_args()

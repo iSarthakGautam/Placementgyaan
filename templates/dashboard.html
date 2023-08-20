@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="https://unpkg.com/vue-router@4.0.15/dist/vue-router.global.js"></script>
+  <link rel="stylesheet" href="../static/css/dashboard.css">
+</head>
+<body>
+ 
+    <nav>
+      <div class="logo">IIC Logo</div>
+      <ul class="nav-links">
+        <li>Home</li>
+        <li>Workshop</li>
+        <li>Connect</li>
+        <li class="profile-dropdown">
+          <!-- Profile button with dropdown content -->
+          <button class="profile-button">
+            <img src="../static/image/avatar.jpeg" alt="avatar_image" height=150% style="border-radius: 50%;">
+          </button>
+          <div class="dropdown-content">
+            <!-- Dropdown menu items -->
+            <a href="#">My Profile</a>
+            <a href="#">Settings</a>
+            <a href="#">Log Out</a>
+          </div>
+        </li>
+      </ul>
+    </nav>
+    <br>
+    <br>
+    <br>
+     
+    <main>
+      <div id="app">
+         <router-view ></router-view>
+       </div>
+    </main>
+    
+
+  <script src="../static/js/dashboard.js"></script>
+</body>
+</html>

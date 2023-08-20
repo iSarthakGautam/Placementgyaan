@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Login Page</title>
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="https://unpkg.com/vue-router@4.0.15/dist/vue-router.global.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
   body {
     background-color: #e6ffff;
@@ -80,18 +82,14 @@
     <div class="login-image">
       <img src="../static/image/login_img.png" alt="placement_image" width="100%" height="600px">
     </div>
+    
     <div class="login-form">
-      <h1>Hi Student<br>Login</h1>
-      <div id="app">{{ greet }}</div>
-      <form>
-        <input type="email" placeholder="Email" required>
-        <input type="password" placeholder="Password" required>
-        <button type="submit">Login</button>
-      </form>
-      <br>
-      <a href="" >New User? sign up</a>
-      <br><br><br><br><br><br<br><br><br>
-      <p style="text-align:right;"><a href="" >Admin</a></p>
+      <div id="app">
+        
+      <router-view ></router-view>
+        
+      </div>
+      
       
     </div>
   </div>

@@ -41,6 +41,11 @@ def login_func():
   return render_template("login.html")
 
 
+@app.route("/dashboard")
+def dashboard_func():
+  return render_template("dashboard.html")
+
+
 api = Api(app)
 api.add_resource(Login, "/api/login")
 api.add_resource(SignUp, "/api/signup")
