@@ -74,6 +74,7 @@ class Student_only_experience(db.Model):
 
 class Notification(db.Model):
   notification_id = db.Column(db.Integer, primary_key=True)
+  notification_title = db.Column (db.String)
   notification_message = db.Column(db.String)
 
 

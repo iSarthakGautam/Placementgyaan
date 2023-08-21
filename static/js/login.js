@@ -1,6 +1,8 @@
 const { createApp, ref } = Vue
   
 const {createRouter,createWebHashHistory} = VueRouter
+localStorage.removeItem('jwtToken');
+localStorage.removeItem('email');
 
 
 
@@ -33,6 +35,14 @@ const Login = {
         Password: this.Password,
         
       };
+      if (this.Email==="" || this.Password===""){
+        Swal.fire({
+            icon: 'error',
+            title: "Email and password can't be empty"
+    
+          })
+        return
+      }
       
      
         base_url=window.location.href.split("/")[0]+"//"+window.location.href.split("/")[2]
@@ -45,10 +55,24 @@ const Login = {
           },
           body: JSON.stringify(login_data),
         }).then((response) => response.json()).then((data) => {
-          localStorage.setItem('jwtToken', data.access_token);
-        })
-      .catch(console.error);
+          console.log(data)
+          if (data.message=="Login Failed" || data.message=="No user exisit in database"){
+            
+            Swal.fire({
+            icon: 'error',
+            title: "Login Failed"
     
+          })
+            return "Error"
+          }
+          if (data.access_token!=""){
+          localStorage.setItem('jwtToken', data.access_token);
+          localStorage.setItem('email', this.Email)
+          redirectUrl = base_url+"/dashboard"
+          window.location.href = redirectUrl;
+          }
+        })
+          
     }
   }
 
@@ -141,17 +165,64 @@ const Signup={
 }
 
 const Admin = { 
+  data: function(){
+    return {
+      Password:"",
+    }
+  },
   template: `
   <h1>Hi Admin<br>Login</h1>
      
       <form>
-        <input type="password" placeholder="Password" required>
-        <button type="submit">Login</button>
+        <input  v-model="Password" type="password" placeholder="Password" required>
+        <button @click="login_button">Login</button>
       </form>
       <br>
       <br><br><br><br>
       <p style="text-align:right;"><router-link to="/" >Student</router-link></p>
   `,
+  
+  methods:{
+    login_button:  async function submitlogin() {
+
+      const login_data = {
+
+        Password: this.Password,
+        
+      };
+      
+     
+        base_url=window.location.href.split("/")[0]+"//"+window.location.href.split("/")[2]
+        api_url=base_url+"/api/admin_login"
+  
+        await fetch(api_url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(login_data),
+        }).then((response) => response.json()).then((data) => {
+
+          if (data.message=="Login failed"){
+            
+            Swal.fire({
+            icon: 'error',
+            title: "Login Failed"
+    
+          })
+            return "Error"
+          }
+          if (data.message=="Login Success"){
+          localStorage.setItem('jwtToken', data.access_token);
+          redirectUrl = base_url+"/admin_dashboard"
+          window.location.href = redirectUrl;
+          }
+        })
+      .catch(console.error);
+    
+    }
+  }
+
 
   
  }

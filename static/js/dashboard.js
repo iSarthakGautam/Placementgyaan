@@ -6,6 +6,14 @@ const {createRouter,createWebHashHistory} = VueRouter
 
 
 const Home = { 
+  data: function(){
+      return {
+        notifications:[]
+
+      }
+      },
+    
+  
   template: `
    <table>
         <tr>
@@ -32,9 +40,9 @@ const Home = {
           <td rowspan="2">
             <div class="notification-panel" @mouseover="stopNotification">
               <marquee onmouseover="this.stop();" onmouseout="this.start();" direction="up" behavior="scroll" :scrollamount="notificationScroll">
-                <div class="notification">Notification 1</div>
-                <div class="notification">Notification 2</div>
-                <div class="notification">Notification 3</div>
+                   <div v-for="(notification, index) in notifications" :key="index" class="notification">
+      <h3 @click="showNotificationBody(notification[0],notification[1])">{{ notification[0] }}</h3>
+    </div>
               </marquee>
             </div>
           </td>
@@ -43,7 +51,7 @@ const Home = {
           <td>
             <div class="box assessment">
               <div class="box-image">
-                <img src="../static/image/assesment.jpeg" alt="Assessment">
+                <img src="../static/image/assesment.jpeg" alt="Assessment" >
               </div>
               <div class="box-text">
                 Assessment
@@ -63,13 +71,86 @@ const Home = {
         </tr>
       </table>
   `,
+    created() {
+    this.fetchNotifications();
+  },
+    methods:  {
+      async fetchNotifications() {
+      const jwtToken = localStorage.getItem('jwtToken');
 
-  
- }
+      if (jwtToken) {
+        try {
+          const response = await fetch('/api/dashboard', {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${jwtToken}`,
+            },
+          });
+
+          if (response.ok) {
+            const notificationsData = await response.json();
+            this.notifications = notificationsData.Notification;
+            console.log(notificationsData.Notification)
+            if (notificationsData.Notification.length==0){
+              this.notifications=[["No Notification","If persit then it might be error"]]
+              console.log(this.notifications)
+            }
+            
+          } 
+            else if (response.status === 500) {
+            swal.fire({
+               icon: 'error',
+            title: 'Can you relogin',
+
+            })
+          }
+         else {
+            console.log("Some Error")
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      }
+
+    },
+      async showNotificationBody(title,body) {
+      await Swal.fire({
+        icon: 'info',
+        title: title,
+        html: body,
+      });
+    },
+      setupNotificationInterval() {
+      // Run the fetchNotifications function every 10 seconds
+      setInterval(() => {
+        this.fetchNotifications();
+        this.checkForNewNotifications();
+      }, 10000); // 10000 ms = 10 seconds
+    },
+    checkForNewNotifications() {
+      const newNotificationCount = this.notifications.length - this.lastNotificationCount;
+      if (newNotificationCount > 1) {
+        Swal.fire({
+          title: 'New Notifications',
+          text: `You have ${newNotificationCount} new notifications.`,
+          icon: 'info',
+        });
+        this.lastNotificationCount = this.notifications.length;
+      }
+    },
+    }
+}
 
 
 
 const Jobs = { 
+  data: function(){
+      return {
+        jobs:[]
+
+      }
+      },
+    
   template: `
   <h1 style="text-align:center;"> Jobs</h1><br> <br>
     <div class="filter-bar">
@@ -77,54 +158,121 @@ const Jobs = {
       <button id="filter-button">Filter</button>
     </div>
 
-    <div class="job-cards">
-      <!-- Example job card 1 -->
-      <div class="job-card" data-skills="Skill 1, Skill 2" data-location="City">
-        <h2>Job Title 1</h2>
-        <p>Job Description 1...</p>
-        <p>Skills: Skill 1, Skill 2</p>
-        <p>Location: City, Country</p>
-        <button class="more-info-button">More Info</button>
-      </div>
+  
 
-      <!-- Example job card 2 -->
-      <div class="job-card" data-skills="Skill 3, Skill 4" data-location="Town">
-        <h2>Job Title 2</h2>
-        <p>Job Description 2...</p>
-        <p>Skills: Skill 3, Skill 4</p>
-        <p>Location: Town, Country</p>
-        <button class="more-info-button">More Info</button>
-      </div>
 
-      <!-- Add more job cards here -->
+      <div v-for="(job, index) in jobs" :key="index" class="job-card" :data-skills="job[6]" :data-location="job[3]">
+      <h2>{{ job[2] }}</h2>
+      <p>{{ job[1] }}</p>
+      <p>Skills: {{ job[6] }}</p>
+      <p>Location: {{ job[3] }}</p>
+      <button class="more-info-button" @click="showJobDetails(job)">More Info</button>
+    </div>
+
+  
+     
+    </div>
 
     </div>
   `,
+created() {
+    this.fetchJobs();
+  },
+    methods:  {
+      async fetchJobs() {
+      const jwtToken = localStorage.getItem('jwtToken');
 
+      if (jwtToken) {
+        try {
+          const response = await fetch('/api/admin/jobs', {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${jwtToken}`,
+            },
+          });
+
+          if (response.ok) {
+            const jobData = await response.json();
+            this.jobs = jobData.jobs;
+            console.log(jobData)
+            if (jobData.jobs.length==0){
+              console.log(this.jobs)
+              swal.fire({
+                icon: 'error',
+               title: 'No Jobs Currently',
+
+            })
+              this.jobs=[]
+            }
+            
+          } 
+            else if (response.status === 500) {
+            swal.fire({
+               icon: 'error',
+            title: 'Can you relogin',
+
+            })
+            }
+              else if (response.status === 404){
+                 const jobData = await response.json();
+            this.jobs = [];
+            console.log(jobData)
+               swal.fire({
+                icon: 'error',
+               title: 'No Jobs Currently',
+
+            })
+              }
+          
+         else {
+            console.log("Some Error")
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      }
+
+    },
+      showJobDetails(job) {
+      // Use SweetAlert2 to show more job details
+      Swal.fire({
+        title: job[2],
+        html: `
+          <p>${job[1]}</p>
+          <p>Skills: ${job[6]}</p>
+          <p>Location: ${job[3]}</p>
+          <p>Min Salary: ${job[4]}</p>
+          <p>Apply Link: ${job[5]}</p>
+          <p>Min Qualification: ${job[7]}</p>
+        `,
+        icon: 'info',
+      });
+    },
   
  }
+
+}
 
 
 
 const Workshops = { 
+  data: function(){
+      return {
+        workshops:[]
+
+      }
+      },
+    
   template: `
 
     <h1 style="text-align:center;"> Workshops</h1><br> <br>
   <div class="workshop-cards">
-    <!-- Example workshop card 1 -->
-    <div class="workshop-card">
-      <h2>Workshop Title 1</h2>
-      <p>Workshop Description 1...</p>
-      <p>Date: June 1, 2023</p>
-      <button class="more-info-button">More Info</button>
-    </div>
 
-    <!-- Example workshop card 2 -->
-    <div class="workshop-card">
-      <h2>Workshop Title 2</h2>
-      <p>Workshop Description 2...</p>
-      <p>Date: July 15, 2023</p>
-      <button class="more-info-button">More Info</button>
+    <div v-for="(workshop, index) in workshops" :key="index" class="workshop-card">
+      <h2>{{ workshop[1] }}</h2>
+      <p>{{ workshop[2] }}</p>
+      <p>Date: {{ workshop[4] }}</p>
+      <button class="more-info-button" @click="showWorkshopDetails(workshop)">More Info</button>
     </div>
 
     <!-- Add more workshop cards here -->
@@ -133,8 +281,79 @@ const Workshops = {
 
 
   `,
-}
+created() {
+    this.fetchJobs();
+  },
+    methods:  {
+      async fetchJobs() {
+      const jwtToken = localStorage.getItem('jwtToken');
 
+      if (jwtToken) {
+        try {
+          const response = await fetch('/api/admin/workshop', {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${jwtToken}`,
+            },
+          });
+
+          if (response.ok) {
+            const workshopData = await response.json();
+            this.workshops = workshopData.workshops;
+            console.log(workshopData)
+            if (workshopData.workshops.length==0){
+              console.log(this.workshops)
+              swal.fire({
+                icon: 'error',
+               title: 'No Workshops Currently',
+
+            })
+              this.workshops=[]
+            }
+            
+          } 
+            else if (response.status === 500) {
+            swal.fire({
+               icon: 'error',
+            title: 'Can you relogin',
+
+            })
+            }
+              else if (response.status === 404){
+                 const workshopData = await response.json();
+            this.workshops = [];
+            console.log(workshopData)
+               swal.fire({
+                icon: 'error',
+               title: 'No Workshops Currently',
+
+            })
+              }
+          
+         else {
+            console.log("Some Error")
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      }
+
+    },
+      showWorkshopDetails(workshop) {
+      Swal.fire({
+        title: workshop[1],
+        html: `
+          <p>${workshop[2]}</p>
+          <p>Date: ${workshop[4]}</p>
+          <p>Registration Link: ${workshop[3]}</p>
+        `,
+        icon: 'info',
+      });
+    },
+  
+ }
+
+}
 
 const Experience = { 
   template: `
@@ -266,3 +485,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 });
+
+
+function logout() {
+  localStorage.removeItem('jwtToken');
+  localStorage.removeItem('email');
+
+  window.location.href = '/'; 
+}

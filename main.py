@@ -3,7 +3,7 @@ from models import *
 from config import Config
 from flask_restful import Resource, Api
 from api_routes import *
-from flask_jwt_extended import JWTManager
+from flask_jwt_extended import JWTManager, jwt_required
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -42,6 +42,7 @@ def login_func():
 
 
 @app.route("/dashboard")
+# @jwt_required()
 def dashboard_func():
   return render_template("dashboard.html")
 

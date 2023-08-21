@@ -114,14 +114,13 @@ class Dashboard(Resource):
     data = Notification.query.all()
     notification_list = []
     for i in data:
-      notification_list.append(i.notification_message)
+      notification_list.append([i.notification_title,i.notification_message])
 
     return {"message": "Success", "Notification": notification_list}, 200
 
 
 class AdminLogin(Resource):
 
-  @jwt_required()
   def post(self):
     args = login_or_signup_parser.parse_args()
     data = Admin.query.all()
@@ -129,8 +128,8 @@ class AdminLogin(Resource):
     print(password)
     if password == args["Password"]:
       access_token = create_access_token(identity=args['Password'])
-      return {"access_token": access_token}, 200
-    return {"Message": "Login failed"}, 401
+      return {"message":"Login Success","access_token": access_token}, 200
+    return {"message": "Login failed"}, 401
 
 
 class Student_Profile(Resource):
@@ -170,7 +169,7 @@ class Student_Profile(Resource):
 
 class Jobs_module(Resource):
 
-  #@jwt_required()
+  @jwt_required()
   def get(self):
     data = jobs.query.all()
     if len(data) == 0:

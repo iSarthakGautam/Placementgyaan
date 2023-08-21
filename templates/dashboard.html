@@ -6,14 +6,15 @@
   <title>Student Dashboard</title>
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 <script src="https://unpkg.com/vue-router@4.0.15/dist/vue-router.global.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <link rel="stylesheet" href="../static/css/dashboard.css">
 </head>
 <body>
  
     <nav>
-      <div class="logo">IIC Logo</div>
+      <div class="logo"><a href="/dashboard">IIC Logo</a></div>
       <ul class="nav-links">
-        <li>Home</li>
+        <li><a href="/dashboard">Home</a></li>
         <li>Workshop</li>
         <li>Connect</li>
         <li class="profile-dropdown">
@@ -25,7 +26,7 @@
             <!-- Dropdown menu items -->
             <a href="#">My Profile</a>
             <a href="#">Settings</a>
-            <a href="#">Log Out</a>
+            <a onclick="logout()">Log Out</a>
           </div>
         </li>
       </ul>
