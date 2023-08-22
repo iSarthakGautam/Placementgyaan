@@ -7,17 +7,14 @@
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 <script src="https://unpkg.com/vue-router@4.0.15/dist/vue-router.global.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <link rel="stylesheet" href="../static/css/dashboard.css">
+  <link rel="stylesheet" href="../static/css/profile.css">
 </head>
 <body>
- <div id="app">
+ 
     <nav>
       <div class="logo"><a href="/dashboard">IIC Logo</a></div>
       <ul class="nav-links">
         <li><a href="/dashboard">Home</a></li>
-        <li><router-link to="workshop" >Workshop</router-link></li>
-        
-        <li><router-link to="connect" >connect</router-link></li>
         <li class="profile-dropdown">
           <!-- Profile button with dropdown content -->
           <button class="profile-button">
@@ -25,7 +22,7 @@
           </button>
           <div class="dropdown-content">
             <!-- Dropdown menu items -->
-            <a href="/profile">My Profile</a>
+            <a href="#">My Profile</a>
             <a href="#">Settings</a>
             <a onclick="logout()">Log Out</a>
           </div>
@@ -36,13 +33,13 @@
     <br>
     <br>
      
-    <main>
-      
+
+      <div id="app">
          <router-view ></router-view>
-       
-    </main>
+       </div>
+
     
-    </div>
-  <script src="../static/js/dashboard.js"></script>
+
+  <script src="../static/js/profile.js"></script>
 </body>
 </html>

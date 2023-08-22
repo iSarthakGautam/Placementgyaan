@@ -43,9 +43,13 @@ def login_func():
 
 @app.route("/dashboard")
 # @jwt_required()
-def dashboard_func():
+def student_profile_func():
   return render_template("dashboard.html")
 
+@app.route("/profile")
+# @jwt_required()
+def dashboard_func():
+  return render_template("profile.html")
 
 api = Api(app)
 api.add_resource(Login, "/api/login")

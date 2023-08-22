@@ -98,10 +98,18 @@ const Home = {
             
           } 
             else if (response.status === 500) {
-            swal.fire({
-               icon: 'error',
-            title: 'Can you relogin',
-
+            Swal.fire({
+              title: 'Session Timed out',
+              text: "Please login again",
+              icon: 'warning',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Ok'
+            }).then((result) => {
+              if (result.isConfirmed) {
+                logout()
+              }
             })
           }
          else {
@@ -207,10 +215,18 @@ created() {
             
           } 
             else if (response.status === 500) {
-            swal.fire({
-               icon: 'error',
-            title: 'Can you relogin',
-
+            Swal.fire({
+              title: 'Session Timed out',
+              text: "Please login again",
+              icon: 'warning',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Ok'
+            }).then((result) => {
+              if (result.isConfirmed) {
+                logout()
+              }
             })
             }
               else if (response.status === 404){
@@ -313,10 +329,18 @@ created() {
             
           } 
             else if (response.status === 500) {
-            swal.fire({
-               icon: 'error',
-            title: 'Can you relogin',
-
+            Swal.fire({
+              title: 'Session Timed out',
+              text: "Please login again",
+              icon: 'warning',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Ok'
+            }).then((result) => {
+              if (result.isConfirmed) {
+                logout()
+              }
             })
             }
               else if (response.status === 404){

@@ -13,13 +13,13 @@ login_or_signup_parser.add_argument('New_Password')
 
 student_profile_parser = reqparse.RequestParser()
 student_profile_parser.add_argument('name')
-student_profile_parser.add_argument('Linkedin_url')
+student_profile_parser.add_argument('linked_in_url')
 student_profile_parser.add_argument('bio')
 student_profile_parser.add_argument('age')
 student_profile_parser.add_argument('skills')
 student_profile_parser.add_argument('current_status')
 student_profile_parser.add_argument('qualification')
-student_profile_parser.add_argument('image_binary_code')
+student_profile_parser.add_argument('image_binary')
 
 job_detail_parser = reqparse.RequestParser()
 job_detail_parser.add_argument('Job_id')
@@ -149,14 +149,16 @@ class Student_Profile(Resource):
   def put(self, email):
     args = student_profile_parser.parse_args()
     data = Student.query.filter_by(email=email).first()
+
     if data == None:
       return {"message": "User Not found"}, 404
-
-    data.name, data.Linkedin_url, data.Age, data.Bio, data.image_binary_code, data.current_status, data.qualification, data.Skills = args[
-      "name"], args["Linkedin_url"], args["age"], args["bio"], args[
-        "image_binary_code"], args["current_status"], args[
+    data.Linkedin_url=args["linked_in_url"]
+   
+    data.name, data.Age, data.Bio, data.image_binary_code, data.current_status, data.qualification, data.Skills = args[
+      "name"], args["age"], args["bio"], args[
+        "image_binary"], args["current_status"], args[
           "qualification"], args["skills"]
-
+    print(args['age'])
     db.session.commit()
 
     data_list = [
@@ -319,6 +321,7 @@ class Change_password_student(Resource):
 
   @jwt_required()
   def put(self):
+    print("hello")
     args = login_or_signup_parser.parse_args()
     data = Student.query.filter_by(email=args['Email']).first()
     if data is None:
