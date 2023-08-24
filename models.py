@@ -68,7 +68,7 @@ class Student_only_experience(db.Model):
   experience_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
   experience_type = db.Column(db.String, nullable=False)
   experience_title = db.Column(db.String, nullable=False)
-  email = db.Column(db.Integer)
+  email = db.Column(db.String)
   url_or_blog = db.Column(db.String)
 
 

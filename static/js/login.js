@@ -139,11 +139,18 @@ const Signup={
         if (response.status==201) {
           
           Swal.fire({
-            icon: 'success',
-            title: 'Sign up Successful',
-            text: 'Please Login',
-
-          })
+              title: 'Sign Up Successful',
+              text: "Please login ",
+              icon: 'success',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Ok'
+            }).then((result) => {
+              if (result.isConfirmed) {
+                window.location.href = '/';
+              }
+            })
         } else {
           Swal.fire({
             icon: 'error',

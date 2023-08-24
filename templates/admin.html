@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="https://unpkg.com/vue-router@4.0.15/dist/vue-router.global.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="../static/css/dashboard.css">
+</head>
+<body>
+ <div id="app">
+    <nav>
+      <div class="logo"><a href="/admin_dashboard">IIC</a></div>
+      <ul class="nav-links">
+
+        <li>
+            <p onclick="change_password()">Change Password</p>  
+        </li>
+        
+        <li>
+            
+            <p onclick="logout()">LogOut</p>
+
+        </li>
+      </ul>
+    </nav>
+    <br>
+    <br>
+    <br>
+     
+    <main>
+      
+         <router-view ></router-view>
+       
+    </main>
+    
+    </div>
+  <script src="../static/js/admin.js"></script>
+</body>
+</html>

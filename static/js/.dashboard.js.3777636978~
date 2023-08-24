@@ -962,22 +962,20 @@ const Experience = {
       },
     
   template: `
-
+<br><br><br>
 <table>
-<tr><br><br><br><br><br><br><h1>&nbsp</h1><br>
-</tr>
 <tr>
-  <td style="vertical-align: center;">
+  <td colspan=1>
   <div class="experience-cards">
     <!-- Add Experience Card -->
     <div class="experience-card add-card">
       <div class="card-content">
         <i class="fas fa-plus"></i>
-        <p @click="add_exp()">Add </p>
+        <p>Add </p>
       </div>
     </div>
   </td>
-  <td colspan=3> 
+  <td colspan=4> 
   <!-- Your Experience Card -->
   <div class="experience-card your-experience-card">
     <h2>Your Experience</h2>
@@ -986,22 +984,25 @@ const Experience = {
         <tr>
           <th>Experience Title</th>
           <th>Description</th>
-          <th>Action</th>
+          <th></th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
-
-        <tr v-for="(exp, index) in student_experiences" :key="index" >
-        <template v-if="exp[4] == exp[4]">
-            <td>{{exp[2]}}</td>
-            <td v-if=" 'video' == exp[1]"> <a href="{{ exp[3] }}" target="_blank"> Click to watch video</td>
-            <td v-else>{{ exp[3] }}</td>
-
-            <td><button class="delete-button" @click="delete_my_exp(exp[0])">Delete</button> </td>
-
-      </template>
-          </tr>
-
+        <!-- Example table rows with edit and delete buttons -->
+        <tr>
+          <td>Job 1</td>
+          <td>Worked as a software developer...</td>
+          <td><button class="edit-button">Edit</button></td>
+          <td><button class="delete-button">Delete</button></td>
+        </tr>
+        <tr>
+          <td>Internship</td>
+          <td>Completed a summer internship...</td>
+          <td><button class="edit-button">Edit</button></td>
+          <td><button class="delete-button">Delete</button></td>
+        </tr>
+        <!-- Add more rows as needed -->
       </tbody>
     </table>
   </div>
@@ -1010,38 +1011,9 @@ const Experience = {
   </tr>
   <tr>
   <td colspan=4>
-  <!-- Experience Table Card -->
-  <h2> Experiences</h2>
-    <div class="experience-card table-card">
-      <table>
-        <thead>
-          <tr>
-            <th>title</th>
-            <th>Description</th>
-            <th> Posted by </th>
-          </tr>
-        </thead>
-           <tr v-for="(exp, index) in admin_experiences" :key="index">
-            <td>{{exp[[2]]}}</td>
-            <td v-if=" 'video' == exp[1]"> <a href="{{ exp[3] }}" target="_blank"> Click to watch video</td>
-            <td v-else>{{ exp[3] }}</td>
-            <td> Admin</td>
-          </tr>
-          <tr v-for="(exp, index) in student_experiences" :key="index">
-            <td>{{exp[[2]]}}</td>
-            <td v-if=" 'video' == exp[1]"> <a href="{{ exp[3] }}" target="_blank"> Click to watch video</td>
-            <td v-else>{{ exp[3] }}</td>
-            <td> Student</td>
-          </tr>
-          
-
-
-      </table>
-    </div>
-  </div>
   
   </td>
-</tr>
+<tr>
 </table>
 
 
@@ -1051,136 +1023,6 @@ const Experience = {
     this.fetchStudentExperience();
   },
     methods:  {
-      async delete_exp_api_request(exp_id) {
-      const delete_data = {
-        user_email: this.user_email,
-        experience_id:exp_id,
-      };
-      
-        api_url="/api/student/experiences";
-        const jwtToken = localStorage.getItem('jwtToken');
-        await fetch(api_url, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${jwtToken}`,
-          },
-          body: JSON.stringify(delete_data),
-        }).then((response) => response.json()).then((data) => {
-
-          
-          if (data.message=="Experience deleted"){
-             this.fetchStudentExperience();
-          Swal.fire({
-              title: 'Test Deleted Successfully',
-              icon: 'success',
-              showCancelButton: false,
-              confirmButtonColor: '#36a3a3',
-              confirmButtonText: 'Ok'
-            })
-            
-          
-          
-          }
-          else{
-            Swal.fire({
-              title: 'Something Went Wrong',
-              text:'Try Again',
-              icon: 'error',
-              confirmButtonColor: '#36a3a3'
-              
-            })
-          }
-        })
-      .catch(console.error);
-          return
-    },
-      delete_my_exp(exp_id){
-      Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#36a3a3',
-        confirmButtonText: 'Yes, delete it!'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.delete_exp_api_request(exp_id);
-        }
-      })
-      
-    },
-      
-      add_exp(){
- Swal.fire({
-  title: 'Submit Experience Details',
-  html: `
-    <p><strong>Note: All Fields are compulsory</strong></p>
-    <select id="experience_type" class="swal2-input" required>
-      <option value="blog">Blog</option>
-      <option value="video">Video</option>
-    </select>
-    <input id="experience_title" class="swal2-input" placeholder="Experience Title" required>
-    <input id="experience_description" class="swal2-input" placeholder="Experience Description" required>
-  `,
-  focusConfirm: false,
-  preConfirm: () => {
-    return {
-      experience_type: document.getElementById('experience_type').value,
-      experience_title: document.getElementById('experience_title').value,
-      email: localStorage.getItem("email"),
-      experience_description: document.getElementById('experience_description').value
-    };
-  }
-}).then((result) => {
-  if (result.isConfirmed) {
-    const jwtToken = localStorage.getItem('jwtToken');
-
-    const postData = {
-      experience_type: result.value.experience_type,
-      experience_title: result.value.experience_title,
-      email: result.value.email,
-      experience_description: result.value.experience_description
-    };
-
-    fetch('/api/student/experiences', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${jwtToken}`,
-      },
-      body: JSON.stringify(postData)
-    })
-    .then(response => {
-      if (response.status === 201) {
-        Swal.fire({
-              title: 'Experience Added Successfully',
-              icon: 'success',
-              showCancelButton: false,
-              confirmButtonColor: '#3085d6',
-              cancelButtonColor: '#d33',
-              confirmButtonText: 'Ok'
-            }).then((result) => {
-              if (result.isConfirmed) {
-                this.fetchStudentExperience();
-              }
-            })
-      } else {
-        console.log("Error");
-      }
-    })
-    .catch(error => {
-      console.error("Request failed:", error);
-    });
-  }
-});
-
-
-},
-
-      
-
       
       async fetchAdminExperience(){
         const jwtToken = localStorage.getItem('jwtToken');
@@ -1196,53 +1038,6 @@ const Experience = {
           if (response.ok) {
             const expData = await response.json();
             this.admin_experiences= expData.Experiences;
-          }
-          else {
-            console.log("Some Error")
-          }
-          if (response.status === 500) {
-            Swal.fire({
-              title: 'Session Timed out',
-              text: "Please login again",
-              icon: 'warning',
-              showCancelButton: false,
-              confirmButtonColor: '#3085d6',
-              cancelButtonColor: '#d33',
-              confirmButtonText: 'Ok'
-            }).then((result) => {
-              if (result.isConfirmed) {
-                logout()
-              }
-            })
-            }
-    
-          
-         
-        } catch (error) {
-          console.error('Error:', error);
-        }
-      }
-        
-      },
-
-      async fetchStudentExperience(){
-        const jwtToken = localStorage.getItem('jwtToken');
-        if (jwtToken) {
-        try {
-          const response = await fetch('/api/student/experiences', {
-            method: 'GET',
-            headers: {
-              'Authorization': `Bearer ${jwtToken}`,
-            },
-          });
-
-          if (response.ok) {
-            const expData = await response.json();
-            console.log(expData)
-            this.student_experiences= expData.Experiences;
-          }
-          else {
-            console.log("Some Error")
           }
             if (response.status === 500) {
             Swal.fire({
@@ -1261,13 +1056,19 @@ const Experience = {
             }
     
           
-         
+         else {
+            console.log("Some Error")
+          }
         } catch (error) {
           console.error('Error:', error);
         }
       }
         
       },
+
+      async fetchStudentExperience(){
+        
+      }
        
         
 }     
@@ -1331,6 +1132,7 @@ app.mount("#app")
 
 
 // Other js functions
+
 
 
 

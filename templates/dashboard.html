@@ -7,26 +7,28 @@
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 <script src="https://unpkg.com/vue-router@4.0.15/dist/vue-router.global.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="../static/css/dashboard.css">
 </head>
 <body>
  <div id="app">
-    <nav>
-      <div class="logo"><a href="/dashboard">IIC Logo</a></div>
-      <ul class="nav-links">
+    <nav >
+      <div style="text-decoration:none;" class="logo"><a href="/dashboard">IIC</a></div>
+      <ul  style="text-decoration:none;" class="nav-links">
         <li><a href="/dashboard">Home</a></li>
         <li><router-link to="workshop" >Workshop</router-link></li>
         
         <li><router-link to="connect" >connect</router-link></li>
         <li class="profile-dropdown">
           <!-- Profile button with dropdown content -->
-          <button class="profile-button">
-            <img src="../static/image/avatar.jpeg" alt="avatar_image" height=150% style="border-radius: 50%;">
+          <button class="profile-button" >
+            <!-- <img src="../static/image/avatar.jpeg" alt="avatar_image" height=150% style="border-radius: 50%;"> -->
+            
+           <p style="size:300px">&#128100; </p> 
           </button>
           <div class="dropdown-content">
             <!-- Dropdown menu items -->
             <a href="/profile">My Profile</a>
-            <a href="#">Settings</a>
             <a onclick="logout()">Log Out</a>
           </div>
         </li>

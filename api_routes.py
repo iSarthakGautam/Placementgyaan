@@ -38,6 +38,7 @@ workshop_detail_parser.add_argument('workshop_description')
 workshop_detail_parser.add_argument('workshop_registration_link')
 workshop_detail_parser.add_argument("workshop_date")
 
+
 Test_module_parser = reqparse.RequestParser()
 Test_module_parser.add_argument('assesment_name')
 Test_module_parser.add_argument('assesment_type')
@@ -180,7 +181,7 @@ class Jobs_module(Resource):
     for i in data:
       job_detail = [
         i.Job_id, i.Job_Title, i.Job_Description, i.Job_location,
-        i.min_Job_salary, i.Skills_require, i.min_qualification
+        i.min_Job_salary, i.Skills_require, i.min_qualification,i.apply_link
       ]
       data_list.append(job_detail)
     return {"message": "Success", "jobs": data_list}, 200
@@ -189,11 +190,10 @@ class Jobs_module(Resource):
   def post(self):
     args = job_detail_parser.parse_args()
     ## HANDLE REDUNDANCY
-    print(args)
     if args["job_title"] == "" or args["job_decription"] == "":
       return {"message": "Enter valid details"}, 405
 
-    ### REMOVE [] from the string of skills and min_qualification
+
     a = jobs(Job_Title=args["job_title"],
              Job_Description=args["job_decription"],
              min_Job_salary=int(args["min_salary"]),
@@ -264,13 +264,11 @@ class Workshop_module(Resource):
   @jwt_required()
   def post(self):
     args = workshop_detail_parser.parse_args()
-    ## HANDLE REDUNDANCY
 
     if args["workshop_title"] == "" or args["workshop_description"] == "":
       return {"message": "Enter valid details"}, 405
-    a = Workshop(workshop_title=args["workshop_title"],
-                 workshop_description=args["workshop_description"],
-                 workshop_registration_link=args["workshop_registration_link"])
+    print(args["workshop_registration_link"])
+    a = Workshop(workshop_title=args["workshop_title"],workshop_description=args["workshop_description"],workshop_registration_link =args["workshop_registration_link"],workshop_date= args["workshop_date"]  )
     db.session.add(a)
     db.session.commit()
 
@@ -648,19 +646,16 @@ class Student_shared_Experience_module(Resource):
     args = Experience_module_parser.parse_args()
 
     if args["experience_type"] not in ["video", "blog"]:
-      return {"message": "Type must be of video or audio type"}, 400
+      return {"message": "Type must be of video or Text type"}, 400
 
     if args["experience_title"] == "" or args["experience_description"] == "":
       return {
         "message":
-        "It should be of video or audio type and title and description should not be empty"
+        "It should be of video or Text type and title and description should not be empty"
       }, 400
-
-    a = Student_only_experience(experience_type=args["experience_type"],
-                                experience_title=args["experience_title"],
-                                email=args["email"],
-                                url_or_blog=args["experience_description"])
-
+    print()
+    a = Student_only_experience(experience_type=args["experience_type"],experience_title=args["experience_title"],      email=args["email"],url_or_blog=args["experience_description"])
+    print(a.email)
     db.session.add(a)
     db.session.commit()
     return {"message": "Experience Added Successfully"}, 201

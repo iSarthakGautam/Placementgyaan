@@ -51,6 +51,12 @@ def student_profile_func():
 def dashboard_func():
   return render_template("profile.html")
 
+@app.route("/admin_dashboard")
+# @jwt_required()
+def admin_dash_func():
+  return render_template("admin.html")
+
+
 api = Api(app)
 api.add_resource(Login, "/api/login")
 api.add_resource(SignUp, "/api/signup")

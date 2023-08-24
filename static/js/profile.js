@@ -262,6 +262,10 @@ app.mount("#app")
 function logout() {
   localStorage.removeItem('jwtToken');
   localStorage.removeItem('email');
+  sessionStorage.removeItem('test_url');
+  
 
   window.location.href = '/'; 
+  window.location.href.reload();
+
 }
