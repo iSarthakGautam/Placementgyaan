@@ -224,7 +224,7 @@ class Jobs_module(Resource):
     if args["job_title"] == "" or args["job_decription"] == "":
       return {"message": "Enter valid details"}, 405
     print(args['job_location'])
-    data.job_title, data.job_escription, data.min_Job_salary, data.Skills_require, data.min_qualification, data.apply_link, data.Job_location = args[
+    data.job_title, data.job_description, data.min_job_salary, data.skills_require, data.min_qualification, data.apply_link, data.job_location = args[
       "job_title"], args["job_decription"], args["min_salary"], str(
         args["skills_required"]), str(
           args["min_qualification"]), args["apply_link"], args['job_location']
@@ -236,7 +236,7 @@ class Jobs_module(Resource):
     data_list = []
     for i in data_new:
       job_detail = [
-        i.Job_id, i.Job_Title, i.Job_Description, i.Job_location,
+        i.job_id, i.job_title, i.job_Description, i.Job_location,
         i.min_Job_salary, i.Skills_require, i.min_qualification
       ]
       data_list.append(job_detail)
