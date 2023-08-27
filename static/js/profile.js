@@ -209,6 +209,7 @@ const Home = {
           Swal.fire({
             icon: 'error',
             title: 'Update Failed',
+            text: 'Old Password Incorrect'
 
           })
         }

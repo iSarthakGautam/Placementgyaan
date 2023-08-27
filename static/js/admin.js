@@ -52,22 +52,24 @@ const Home = {
               </div>
             </div>
           </td>
+          <td>
+            <div class="box assessment">
+              <div class="box-image">
+                <img src="../static/image/notification.png" alt="Notification" >
+              </div>
+              <div class="box-text">
+                <router-link to="/notification" >Notification</router-link>
+              </div>
+            </div>
+          </td>
           
         </tr>
       </table>
     </div>
     </div>
   `,
-    created() {
-    this.any_function_name();   // to call method when page is loaded
-  },
-    methods:  {
-      async any_function_name() {
-      const jwtToken = localStorage.getItem('jwtToken');  // to fetch JWT token 
-
-      
-    },
-    }
+   
+    
 }
 
 // Jobs component
@@ -319,7 +321,7 @@ created() {
     async delete_job_api_request(job_id) {
       const delete_data = {
         // user_email: this.user_email,
-        Job_id:job_id,
+        job_id:job_id,
       };
       
         api_url="/api/admin/jobs";
@@ -412,7 +414,7 @@ created() {
 }).then((result) => {
   if (result.isConfirmed) {
     const postData = {
-      Job_id:job[0],
+      job_id:job[0],
       job_title: result.value.job_title,
       job_description: result.value.job_description,
       min_salary: result.value.min_salary,
@@ -822,6 +824,7 @@ const assesment = {
       <div class="toggle-switch-bg"></div> 
     </div><h1>&nbsp Student Test</h1>
   </div>
+  <button class="more-info-button" @click="add_assesment(assesment)">Add Assesment</button>
 
    <div class="table-container">
       <table>
@@ -835,10 +838,10 @@ const assesment = {
         </thead>
         <tbody>
           <tr v-for="(test, index) in tests" :key="index">
+            <td>{{ test[3] }}</td>
             <td>{{ test[1] }}</td>
-            <td>{{ test[2] }}</td>
-            <td>{{ test[4] }}</td>
-            <td><button @click="give_test(test[3])" >Give</button></td>
+            <td>{{ test[5] }}</td>
+            <td><button class="more-info-button" @click="edit_workshop(test,index)">Edit</button><button class="delete-button" @click="delete_asesment(test[0])">Delete</button></td>
           </tr>
         
         </tbody>
@@ -932,7 +935,93 @@ created() {
         // Execute function when toggled OFF
         window.location.href = '/dashboard#/assesment';
       }
-    }
+    },
+
+      // Add assesment
+      add_assesment(assesment){
+      Swal.fire({
+  title: 'Add a Assement',
+  html: `
+
+    <input id="assesment_type" class="swal2-input" placeholder="Assesment Type">
+    <input id="assesment_name" class="swal2-input" placeholder="Assesmnt Name">
+    <input id="assesment_link" class="swal2-input" placeholder="Link">
+    <input id="deadline" class="swal2-input" placeholder="Deadline">
+    <input id="time_limit_seconds" class="swal2-input" placeholder="Duration">
+
+  `,
+  focusConfirm: false,
+  confirmButtonColor: '#36a3a3',
+  preConfirm: () => {
+    return {
+      assesment_type: document.getElementById('assesment_type').value,
+      assesment_name: document.getElementById('assesment_name').value,
+      assesment_link: document.getElementById('assesment_link').value,
+      deadline: document.getElementById('deadline').value,
+      time_limit_seconds: document.getElementById('time_limit_seconds').value,
+      
+      // user_email: localStorage.getItem('email'),
+    };
+  }
+}).then((result) => {
+  if (result.isConfirmed) {
+    const postData = {
+      assesment_type: result.value.assesment_type,
+      assesment_name: result.value.assesment_name,
+      assesment_link: result.value.assesment_link,
+      deadline: result.value.deadline,
+      time_limit_seconds: result.value.time_limit_seconds,
+    
+      // user_email: result.value.user_email
+    };
+    
+    const jwtToken = localStorage.getItem('jwtToken');
+    fetch('/api/admin/test', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${jwtToken}`,
+      },
+      body: JSON.stringify(postData)
+    })
+    .then(response => {
+      if (response.status === 201) {
+        this.fetchMocktests();
+        Swal.fire({
+              title: 'Assesment added Successfully',
+              icon: 'success',
+              showCancelButton: false,
+              confirmButtonColor: '#36a3a3',
+              confirmButtonText: 'Ok'
+            })
+      } 
+      else if((response.status === 200)){
+        Swal.fire({
+          title:"Assesment Already Their",
+          text:"Recheck Drive Link",
+          icon:"info",
+          confirmButtonColor: '#36a3a3',
+        })
+      }
+      else {
+        Swal.fire({
+          title:"Something Went Wrong",
+          text:"Try Again",
+          icon:"error",
+          confirmButtonColor: '#36a3a3',
+        })
+      }
+    })
+    .catch(error => {
+      console.error("Request failed:", error);
+    });
+  }
+});
+
+    },
+      delete_asesment(assesment){
+        alert("deleting")
+      },
   
  }
 
@@ -1303,7 +1392,7 @@ function change_password(){
         } else {
           Swal.fire({
             title:'Password Change Failed',
-            text:'An error occurred while changing your password.', 
+            text:'Old Password is incorrect', 
             icon: 'error',
             confirmButtonColor: '#3085d6'
           });

@@ -225,7 +225,7 @@ class Jobs_module(Resource):
       return {"message": "Enter valid details"}, 405
     print(args['job_location'])
     data.job_title, data.job_description, data.min_salary, data.skills_required, data.min_qualification, data.apply_link, data.job_location = args[
-      "job_title"], args["job_decription"], args["min_salary"], str(
+      "job_title"], args["job_description"], args["min_salary"], str(
         args["skills_required"]), str(
           args["min_qualification"]), args["apply_link"], args['job_location']
     db.session.commit()

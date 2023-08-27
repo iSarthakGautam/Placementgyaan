@@ -1,8 +1,7 @@
 const { createApp, ref } = Vue
   
 const {createRouter,createWebHashHistory} = VueRouter
-localStorage.removeItem('jwtToken');
-localStorage.removeItem('email');
+
 
 
 
@@ -27,6 +26,11 @@ const Login = {
       <br><br><br><br>
       <p style="text-align:right;"><router-link to="admin" >Admin</a></p>
   `,
+  created(){
+    localStorage.removeItem('jwtToken');
+localStorage.removeItem('email');
+  }
+  ,
   methods:{
     login_button:  async function submitlogin() {
 
@@ -56,11 +60,12 @@ const Login = {
           body: JSON.stringify(login_data),
         }).then((response) => response.json()).then((data) => {
           console.log(data)
-          if (data.message=="Login Failed" || data.message=="No user exisit in database"){
+          if (data.message=="Login Failed" || data.message=="No user exist in database"){
             
             Swal.fire({
             icon: 'error',
-            title: "Login Failed"
+            title: "Login Failed",
+            text: "Either Email or password is incorrect"
     
           })
             return "Error"

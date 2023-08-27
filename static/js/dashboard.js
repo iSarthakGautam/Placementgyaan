@@ -70,11 +70,55 @@ const Home = {
           </td>
         </tr>
       </table>
+
+      <div  @click="showMessageModal()" class="floating-button">
+  <img src="../static/image/contact_us.jpg" alt="Button Image">
+</div>
   `,
     created() {
     this.fetchNotifications();
   },
     methods:  {
+      showMessageModal() {
+      Swal.fire({
+        title: 'Report a Problem!',
+        input: 'text',
+        inputLabel: 'What technical issue are you facing?',
+        inputPlaceholder: 'Type your message here...',
+        showCancelButton: true,
+        confirmButtonColor: '#36a3a3',
+        confirmButtonText: 'Send',
+        preConfirm: (message) => {
+          this.postMessageToWebhook(message);
+        }
+      });
+    },
+    async postMessageToWebhook(message) {
+      const webhookUrl = 'https://chat.googleapis.com/v1/spaces/AAAAFcPesEQ/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=evZFfvAqh5-Tcj8uwwPUWXBASDP5zYynzqvv21Owkac';
+      const userEmail = localStorage.getItem('email');
+      const formattedMessage = `User Email: ${userEmail}\nProblem: ${message}`;
+      const postData = {
+        text: formattedMessage
+      };
+
+      try {
+        const response = await fetch(webhookUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(postData)
+        });
+
+        if (response.ok) {
+          Swal.fire('Message Sent', 'Your message has been sent successfully! We will get back to you soon', 'success');
+        } else {
+          Swal.fire('Error', 'Failed to send message. Please try again later.', 'error');
+        }
+      } catch (error) {
+        Swal.fire('Error', 'An error occurred while sending the message. Please try again later.', 'error');
+      }
+    },
       async fetchNotifications() {
       const jwtToken = localStorage.getItem('jwtToken');
 
@@ -103,7 +147,7 @@ const Home = {
               text: "Please login again",
               icon: 'warning',
               showCancelButton: false,
-              confirmButtonColor: '#3085d6',
+              confirmButtonColor: '#36a3a3',
               cancelButtonColor: '#d33',
               confirmButtonText: 'Ok'
             }).then((result) => {
@@ -221,7 +265,7 @@ const Jobs = {
       
       return this.jobs.filter(job => {
         const skillMatch = this.skillFilter === "" || job[5].toLowerCase().includes(skillFilterLower);
-        const locationMatch = this.locationFilter === "" || job[3].toLowerCase().includes(locationFilterLower)|| one;
+        const locationMatch = this.locationFilter === "" || job[3].toLowerCase().includes(locationFilterLower) || null;
         // You can add a similar condition for qualification if needed
         const qualificationMatch = this.qualificationFilter === "" || job[6].toLowerCase().includes(qualificationFilterLower);
         
@@ -298,16 +342,17 @@ created() {
       showJobDetails(job) {
       // Use SweetAlert2 to show more job details
       Swal.fire({
-        title: job[2],
+        title: job[1],
         html: `
-          <p>${job[1]}</p>
+          <p>${job[2]}</p>
           <p>Skills: ${job[5]}</p>
           <p>Location: ${job[3]}</p>
-          <p>Min Salary: ${job[4]}</p>
-          <p>Apply Link: ${job[7]}</p>
+          <p>Min Salary: Rs.${job[4]} (CTC)</p>
+          <p>Apply Link: <a href="${job[7]}">${job[7]}</a></p>
           <p>Min Qualification: ${job[6]}</p>
         `,
         icon: 'info',
+        confirmButtonColor: '#36a3a3'
       });
     },
   
@@ -492,7 +537,7 @@ created() {
               text: "Please login again",
               icon: 'warning',
               showCancelButton: false,
-              confirmButtonColor: '#3085d6',
+              confirmButtonColor: '#36a3a3',
               cancelButtonColor: '#d33',
               confirmButtonText: 'Ok'
             }).then((result) => {
