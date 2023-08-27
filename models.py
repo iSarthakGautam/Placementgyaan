@@ -40,7 +40,7 @@ class jobs(db.Model):
   job_title = db.Column(db.String, nullable=False)
   job_description = db.Column(db.String, nullable=False)
   job_location = db.Column(db.String, nullable=False)
-  min_job_salary = db.Column(db.Integer, nullable=False)
+  min_salary = db.Column(db.Integer, nullable=False)
   skills_require = db.Column(db.String,
                              nullable=False)  # to be converted to list
   min_qualification = db.Column(db.String,

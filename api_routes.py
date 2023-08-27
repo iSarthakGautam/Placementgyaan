@@ -22,9 +22,9 @@ student_profile_parser.add_argument('qualification')
 student_profile_parser.add_argument('image_binary')
 
 job_detail_parser = reqparse.RequestParser()
-job_detail_parser.add_argument('Job_id')
+job_detail_parser.add_argument('job_id')
 job_detail_parser.add_argument('job_title')
-job_detail_parser.add_argument('job_decription')
+job_detail_parser.add_argument('job_description')
 job_detail_parser.add_argument('job_location')
 job_detail_parser.add_argument('apply_link')
 job_detail_parser.add_argument('skills_required')
@@ -179,8 +179,8 @@ class Jobs_module(Resource):
     data_list = []
     for i in data:
       job_detail = [
-        i.job_id, i.job_title, i.job_description, i.job_location,
-        i.min_Job_salary, i.skills_require, i.min_qualification, i.apply_link
+        i.job_id, i.job_title, i.job_description, i.job_location, i.min_salary,
+        i.skills_require, i.min_qualification, i.apply_link
       ]
       data_list.append(job_detail)
     return {"message": "Success", "jobs": data_list}, 200
@@ -193,8 +193,8 @@ class Jobs_module(Resource):
       return {"message": "Enter valid details"}, 405
 
     a = jobs(job_title=args["job_title"],
-             job_description=args["job_decription"],
-             min_job_salary=int(args["min_salary"]),
+             job_description=args["job_description"],
+             min_salary=int(args["min_salary"]),
              job_location=args["job_location"],
              skills_require=str(args["skills_required"]),
              min_qualification=str(args["min_qualification"]),
@@ -207,7 +207,7 @@ class Jobs_module(Resource):
   @jwt_required()
   def delete(self):
     args = job_detail_parser.parse_args()
-    data = jobs.query.filter_by(job_id=args["Job_id"])
+    data = jobs.query.filter_by(job_id=args["job_id"])
     if data.first() is None:
       return {"message": "Job doesn't exist"}, 404
     data.delete()
@@ -217,14 +217,14 @@ class Jobs_module(Resource):
   @jwt_required()
   def put(self):
     args = job_detail_parser.parse_args()
-    data = jobs.query.filter_by(job_id=int(args["Job_id"])).first()
+    data = jobs.query.filter_by(job_id=int(args["job_id"])).first()
     if data is None:
       return {"message": "job id doesn't exist"}, 404
 
-    if args["job_title"] == "" or args["job_decription"] == "":
+    if args["job_title"] == "" or args["job_description"] == "":
       return {"message": "Enter valid details"}, 405
     print(args['job_location'])
-    data.job_title, data.job_description, data.min_job_salary, data.skills_require, data.min_qualification, data.apply_link, data.job_location = args[
+    data.job_title, data.job_description, data.min_salary, data.skills_require, data.min_qualification, data.apply_link, data.job_location = args[
       "job_title"], args["job_decription"], args["min_salary"], str(
         args["skills_required"]), str(
           args["min_qualification"]), args["apply_link"], args['job_location']
@@ -236,8 +236,8 @@ class Jobs_module(Resource):
     data_list = []
     for i in data_new:
       job_detail = [
-        i.job_id, i.job_title, i.job_Description, i.Job_location,
-        i.min_Job_salary, i.Skills_require, i.min_qualification
+        i.job_id, i.job_title, i.job_description, i.job_location, i.min_salary,
+        i.skills_require, i.min_qualification
       ]
       data_list.append(job_detail)
     return {"message": "updated Successfully", "jobs": data_list}, 200
