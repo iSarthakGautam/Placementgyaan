@@ -138,6 +138,16 @@ main {
   cursor: pointer;
 }
 
+.delete-button {
+    margin-top: 15px;
+  background-color: #007bff;
+  color: red;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  }
+
 
 
 

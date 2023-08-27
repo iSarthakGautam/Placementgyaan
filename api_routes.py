@@ -35,9 +35,9 @@ workshop_detail_parser = reqparse.RequestParser()
 workshop_detail_parser.add_argument('workshop_id')
 workshop_detail_parser.add_argument('workshop_title')
 workshop_detail_parser.add_argument('workshop_description')
+workshop_detail_parser.add_argument('workshop_mode_location')
 workshop_detail_parser.add_argument('workshop_registration_link')
-workshop_detail_parser.add_argument("workshop_date")
-
+workshop_detail_parser.add_argument('workshop_date')
 
 Test_module_parser = reqparse.RequestParser()
 Test_module_parser.add_argument('assesment_name')
@@ -70,8 +70,8 @@ class Login(Resource):
     args = login_or_signup_parser.parse_args()
     data = Student.query.filter_by(email=args["Email"]).first()
     print(data)
-    if data is None :
-      return {"message":"No user exisit in database"},404
+    if data is None:
+      return {"message": "No user exisit in database"}, 404
     if data.email == args["Email"] and data.password == args["Password"]:
       authenticated = True
 
@@ -115,7 +115,7 @@ class Dashboard(Resource):
     data = Notification.query.all()
     notification_list = []
     for i in data:
-      notification_list.append([i.notification_title,i.notification_message])
+      notification_list.append([i.notification_title, i.notification_message])
 
     return {"message": "Success", "Notification": notification_list}, 200
 
@@ -129,7 +129,7 @@ class AdminLogin(Resource):
     print(password)
     if password == args["Password"]:
       access_token = create_access_token(identity=args['Password'])
-      return {"message":"Login Success","access_token": access_token}, 200
+      return {"message": "Login Success", "access_token": access_token}, 200
     return {"message": "Login failed"}, 401
 
 
@@ -153,12 +153,11 @@ class Student_Profile(Resource):
 
     if data == None:
       return {"message": "User Not found"}, 404
-    data.Linkedin_url=args["linked_in_url"]
-   
+    data.Linkedin_url = args["linked_in_url"]
+
     data.name, data.Age, data.Bio, data.image_binary_code, data.current_status, data.qualification, data.Skills = args[
-      "name"], args["age"], args["bio"], args[
-        "image_binary"], args["current_status"], args[
-          "qualification"], args["skills"]
+      "name"], args["age"], args["bio"], args["image_binary"], args[
+        "current_status"], args["qualification"], args["skills"]
     print(args['age'])
     db.session.commit()
 
@@ -181,7 +180,7 @@ class Jobs_module(Resource):
     for i in data:
       job_detail = [
         i.Job_id, i.Job_Title, i.Job_Description, i.Job_location,
-        i.min_Job_salary, i.Skills_require, i.min_qualification,i.apply_link
+        i.min_Job_salary, i.Skills_require, i.min_qualification, i.apply_link
       ]
       data_list.append(job_detail)
     return {"message": "Success", "jobs": data_list}, 200
@@ -192,7 +191,6 @@ class Jobs_module(Resource):
     ## HANDLE REDUNDANCY
     if args["job_title"] == "" or args["job_decription"] == "":
       return {"message": "Enter valid details"}, 405
-
 
     a = jobs(Job_Title=args["job_title"],
              Job_Description=args["job_decription"],
@@ -225,13 +223,13 @@ class Jobs_module(Resource):
 
     if args["job_title"] == "" or args["job_decription"] == "":
       return {"message": "Enter valid details"}, 405
-    print(data.Job_Title)
-    data.Job_Title, data.Job_Description, data.min_Job_salary, data.Skills_require, data.min_qualification, data.apply_link = args[
+    print(args['job_location'])
+    data.Job_Title, data.Job_Description, data.min_Job_salary, data.Skills_require, data.min_qualification, data.apply_link, data.Job_location = args[
       "job_title"], args["job_decription"], args["min_salary"], str(
         args["skills_required"]), str(
-          args["min_qualification"]), args["apply_link"]
+          args["min_qualification"]), args["apply_link"], args['job_location']
     db.session.commit()
-    print(data.Job_Title)
+    # print(data.Job_Title)
     data_new = jobs.query.all()
     if len(data_new) == 0:
       return {"message": "Jobs not found"}, 404
@@ -256,7 +254,7 @@ class Workshop_module(Resource):
     for i in data:
       workshop_detail = [
         i.workshop_id, i.workshop_title, i.workshop_description,
-        i.workshop_registration_link, i.workshop_date
+        i.workshop_mode_location, i.workshop_registration_link, i.workshop_date
       ]
       data_list.append(workshop_detail)
     return {"message": "Success", "workshops": data_list}, 200
@@ -268,7 +266,11 @@ class Workshop_module(Resource):
     if args["workshop_title"] == "" or args["workshop_description"] == "":
       return {"message": "Enter valid details"}, 405
     print(args["workshop_registration_link"])
-    a = Workshop(workshop_title=args["workshop_title"],workshop_description=args["workshop_description"],workshop_registration_link =args["workshop_registration_link"],workshop_date= args["workshop_date"]  )
+    a = Workshop(workshop_title=args["workshop_title"],
+                 workshop_description=args["workshop_description"],
+                 workshop_registration_link=args["workshop_registration_link"],
+                 workshop_mode_location=args["workshop_mode_location"],
+                 workshop_date=args["workshop_date"])
     db.session.add(a)
     db.session.commit()
 
@@ -297,9 +299,10 @@ class Workshop_module(Resource):
     if args["workshop_title"] == "" or args["workshop_description"] == "":
       return {"message": "Enter valid details"}, 405
 
-    data.workshop_title, data.workshop_description, data.workshop_registration_link, data.workshop_date = args[
+    data.workshop_title, data.workshop_description, data.workshop_registration_link, data.workshop_date, data.workshop_mode_location = args[
       "workshop_title"], args["workshop_description"], args[
-        "workshop_registration_link"], args["workshop_date"]
+        "workshop_registration_link"], args["workshop_date"], args[
+          "workshop_mode_location"]
     db.session.commit()
 
     data_new = Workshop.query.all()
@@ -654,7 +657,10 @@ class Student_shared_Experience_module(Resource):
         "It should be of video or Text type and title and description should not be empty"
       }, 400
     print()
-    a = Student_only_experience(experience_type=args["experience_type"],experience_title=args["experience_title"],      email=args["email"],url_or_blog=args["experience_description"])
+    a = Student_only_experience(experience_type=args["experience_type"],
+                                experience_title=args["experience_title"],
+                                email=args["email"],
+                                url_or_blog=args["experience_description"])
     print(a.email)
     db.session.add(a)
     db.session.commit()

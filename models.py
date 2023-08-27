@@ -35,13 +35,13 @@ class Assesment(db.Model):
 
 
 class jobs(db.Model):
-  Job_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+  job_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
-  Job_Title = db.Column(db.String, nullable=False)
-  Job_Description = db.Column(db.String, nullable=False)
-  Job_location = db.Column(db.String, nullable=False)
-  min_Job_salary = db.Column(db.Integer, nullable=False)
-  Skills_require = db.Column(db.String,
+  job_title = db.Column(db.String, nullable=False)
+  job_description = db.Column(db.String, nullable=False)
+  job_location = db.Column(db.String, nullable=False)
+  min_job_salary = db.Column(db.Integer, nullable=False)
+  skills_require = db.Column(db.String,
                              nullable=False)  # to be converted to list
   min_qualification = db.Column(db.String,
                                 nullable=False)  # to be converted to list
@@ -52,6 +52,7 @@ class Workshop(db.Model):
   workshop_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
   workshop_title = db.Column(db.String, nullable=False)
   workshop_description = db.Column(db.String, nullable=False)
+  workshop_mode_location = db.Column(db.String)
   workshop_registration_link = db.Column(db.String)
   workshop_date = db.Column(db.String)
 
@@ -62,6 +63,7 @@ class experience(db.Model):
   experience_title = db.Column(db.String, nullable=False)
   roll_number = db.Column(db.Integer)
   url_or_blog = db.Column(db.String)
+
 
 class Student_only_experience(db.Model):
   #this db maintains a separate copy for student only data base
@@ -74,7 +76,7 @@ class Student_only_experience(db.Model):
 
 class Notification(db.Model):
   notification_id = db.Column(db.Integer, primary_key=True)
-  notification_title = db.Column (db.String)
+  notification_title = db.Column(db.String)
   notification_message = db.Column(db.String)
 
 
