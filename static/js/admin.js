@@ -1019,9 +1019,67 @@ created() {
 });
 
     },
-      delete_asesment(assesment){
-        alert("deleting")
-      },
+    // Deleting Assesment
+    async delete_assesment_api_request(assesment_id) {
+      const delete_data = {
+        // user_email: this.user_email,
+        workshop_id:workshop_id,
+      };
+      
+        api_url="/api/admin/workshop";
+        const jwtToken = localStorage.getItem('jwtToken');
+        await fetch(api_url, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${jwtToken}`,
+          },
+          body: JSON.stringify(delete_data),
+        }).then((response) => response.json()).then((data) => {
+
+          
+          if (data.message=="Workshop deleted successfully"){
+             this.fetchWorkshops();
+          Swal.fire({
+              title: 'Workshop Deleted Successfully',
+              icon: 'success',
+              showCancelButton: false,
+              confirmButtonColor: '#36a3a3',
+              confirmButtonText: 'Ok'
+            })
+            
+          
+          
+          }
+          else{
+            Swal.fire({
+              title: 'Something Went Wrong',
+              text:'Try Again',
+              icon: 'error',
+              confirmButtonColor: '#36a3a3'
+              
+            })
+          }
+        })
+      .catch(console.error);
+          return
+    },
+      delete_workshop(workshop_id){
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#36a3a3',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.delete_workshop_api_request(workshop_id);
+        }
+      })
+      
+    },
   
  }
 
