@@ -180,7 +180,7 @@ class Jobs_module(Resource):
     for i in data:
       job_detail = [
         i.job_id, i.job_title, i.job_description, i.job_location, i.min_salary,
-        i.skills_require, i.min_qualification, i.apply_link
+        i.skills_required, i.min_qualification, i.apply_link
       ]
       data_list.append(job_detail)
     return {"message": "Success", "jobs": data_list}, 200
@@ -189,14 +189,14 @@ class Jobs_module(Resource):
   def post(self):
     args = job_detail_parser.parse_args()
     ## HANDLE REDUNDANCY
-    if args["job_title"] == "" or args["job_decription"] == "":
+    if args["job_title"] == "" or args["job_description"] == "":
       return {"message": "Enter valid details"}, 405
 
     a = jobs(job_title=args["job_title"],
              job_description=args["job_description"],
              min_salary=int(args["min_salary"]),
              job_location=args["job_location"],
-             skills_require=str(args["skills_required"]),
+             skills_required=str(args["skills_required"]),
              min_qualification=str(args["min_qualification"]),
              apply_link=args["apply_link"])
     db.session.add(a)
@@ -224,7 +224,7 @@ class Jobs_module(Resource):
     if args["job_title"] == "" or args["job_description"] == "":
       return {"message": "Enter valid details"}, 405
     print(args['job_location'])
-    data.job_title, data.job_description, data.min_salary, data.skills_require, data.min_qualification, data.apply_link, data.job_location = args[
+    data.job_title, data.job_description, data.min_salary, data.skills_required, data.min_qualification, data.apply_link, data.job_location = args[
       "job_title"], args["job_decription"], args["min_salary"], str(
         args["skills_required"]), str(
           args["min_qualification"]), args["apply_link"], args['job_location']
@@ -237,7 +237,7 @@ class Jobs_module(Resource):
     for i in data_new:
       job_detail = [
         i.job_id, i.job_title, i.job_description, i.job_location, i.min_salary,
-        i.skills_require, i.min_qualification
+        i.skills_required, i.min_qualification
       ]
       data_list.append(job_detail)
     return {"message": "updated Successfully", "jobs": data_list}, 200

@@ -234,7 +234,7 @@ created() {
   html: `
 
     <input id="job_title" class="swal2-input" placeholder="Job Title">
-    <input id="job_decription" class="swal2-input" placeholder="Description">
+    <input id="job_description" class="swal2-input" placeholder="Description">
     <input id="min_salary" class="swal2-input" placeholder="Salary">
     <input id="job_location" class="swal2-input" placeholder="Location">
     <input id="apply_link" class="swal2-input" placeholder="Link">
@@ -247,7 +247,7 @@ created() {
   preConfirm: () => {
     return {
       job_title: document.getElementById('job_title').value,
-      job_decription: document.getElementById('job_decription').value,
+      job_description: document.getElementById('job_description').value,
       min_salary: document.getElementById('min_salary').value,
       job_location: document.getElementById('job_location').value,
       apply_link: document.getElementById('apply_link').value,
@@ -261,7 +261,7 @@ created() {
   if (result.isConfirmed) {
     const postData = {
       job_title: result.value.job_title,
-      job_decription: result.value.job_decription,
+      job_description: result.value.job_description,
       min_salary: result.value.min_salary,
       job_location: result.value.job_location,
       apply_link: result.value.apply_link,
@@ -386,7 +386,7 @@ created() {
   html: `
 
     <input id="job_title" class="swal2-input" value=${job[1]}>
-    <input id="job_decription" class="swal2-input" value=${job[2]}>
+    <input id="job_description" class="swal2-input" value=${job[2]}>
     <input id="min_salary" class="swal2-input" value=${job[4]}>
     <input id="job_location" class="swal2-input" value=${job[3]}>
     <input id="apply_link" class="swal2-input" value=${job[7]}>
@@ -399,7 +399,7 @@ created() {
   preConfirm: () => {
     return {
       job_title: document.getElementById('job_title').value,
-      job_decription: document.getElementById('job_decription').value,
+      job_description: document.getElementById('job_description').value,
       min_salary: document.getElementById('min_salary').value,
       job_location: document.getElementById('job_location').value,
       apply_link: document.getElementById('apply_link').value,
@@ -414,7 +414,7 @@ created() {
     const postData = {
       Job_id:job[0],
       job_title: result.value.job_title,
-      job_decription: result.value.job_decription,
+      job_description: result.value.job_description,
       min_salary: result.value.min_salary,
       job_location: result.value.job_location,
       apply_link: result.value.apply_link,
