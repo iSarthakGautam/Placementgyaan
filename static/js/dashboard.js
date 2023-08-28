@@ -8,7 +8,9 @@ const {createRouter,createWebHashHistory} = VueRouter
 const Home = { 
   data: function(){
       return {
-        notifications:[]
+        notifications:[],
+        notification_count:0,
+        notificationScroll:2
 
       }
       },
