@@ -1,7 +1,8 @@
 const { createApp, ref } = Vue
   
 const {createRouter,createWebHashHistory} = VueRouter
-
+localStorage.removeItem('jwtToken');
+localStorage.removeItem('email');
 
 
 
@@ -16,20 +17,14 @@ const Login = {
   template: `
   <h1>Hi Student<br>Login</h1>
      
-      <form>
         <input v-model="Email" type="email" placeholder="Email" required>
         <input v-model="Password" type="password" placeholder="Password" required>
         <button @click="login_button" >Login</button>
-      </form>
       <br>
       <router-link to="signup">sign up</router-link>
       <br><br><br><br>
       <p style="text-align:right;"><router-link to="admin" >Admin</a></p>
-  `,
-  created(){
-    localStorage.removeItem('jwtToken');
-localStorage.removeItem('email');
-  }
+  `
   ,
   methods:{
     login_button:  async function submitlogin() {
@@ -59,8 +54,7 @@ localStorage.removeItem('email');
           },
           body: JSON.stringify(login_data),
         }).then((response) => response.json()).then((data) => {
-          console.log(data)
-          if (data.message=="Login Failed" || data.message=="No user exist in database"){
+          if (data.message=="Login Failed" || data.message=="No user exisit in database"){
             
             Swal.fire({
             icon: 'error',
@@ -70,7 +64,7 @@ localStorage.removeItem('email');
           })
             return "Error"
           }
-          if (data.access_token!=""){
+          else if (data.access_token != ""){
           localStorage.setItem('jwtToken', data.access_token);
           localStorage.setItem('email', this.Email)
           redirectUrl = base_url+"/dashboard"
@@ -98,14 +92,14 @@ const Signup={
 
   <h1>Hi Student<br>Sign Up</h1>
      
-      <form>
+
         <input v-model="Name" type="text" placeholder="Name" required>
         <input v-model="roll_no" type="text" placeholder="Roll Number" required>
         <input v-model="Email" type="email" placeholder="Email" required>
         <input v-model="Password" type="password" placeholder="Password" required>
         <input v-model="confirm_password " type="password" placeholder="Confirm Password" required>
         <button @click="signup_button">Signup</button>
-      </form>
+
       <br>
       <router-link to="/">Back to Login</router-link>
       
@@ -185,10 +179,9 @@ const Admin = {
   template: `
   <h1>Hi Admin<br>Login</h1>
      
-      <form>
         <input  v-model="Password" type="password" placeholder="Password" required>
         <button @click="login_button">Login</button>
-      </form>
+
       <br>
       <br><br><br><br>
       <p style="text-align:right;"><router-link to="/" >Student</router-link></p>

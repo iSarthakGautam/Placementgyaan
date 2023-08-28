@@ -310,7 +310,7 @@ created() {
               text: "Please login again",
               icon: 'warning',
               showCancelButton: false,
-              confirmButtonColor: '#3085d6',
+              confirmButtonColor: '#36a3a3',
               cancelButtonColor: '#d33',
               confirmButtonText: 'Ok'
             }).then((result) => {
@@ -382,8 +382,9 @@ const Workshops = {
     <div v-for="(workshop, index) in workshops" :key="index" class="workshop-card">
       <h2>{{ workshop[1] }}</h2>
       <p>{{ workshop[2] }}</p>
-      <p>Date: {{ workshop[4] }}</p>
-      <p><a :href="workshop[3]" target="_blank"> Register</a></p>
+      <p>Mode : {{workshop[3]}}
+      <p>Date: {{ workshop[5] }}</p>
+      <p><a :href="'//'+workshop[4]" target="_blank"> Register</a></p>
     </div>
 
     <!-- Add more workshop cards here -->
@@ -430,7 +431,7 @@ created() {
               text: "Please login again",
               icon: 'warning',
               showCancelButton: false,
-              confirmButtonColor: '#3085d6',
+              confirmButtonColor: '#36a3a3',
               cancelButtonColor: '#d33',
               confirmButtonText: 'Ok'
             }).then((result) => {
@@ -489,9 +490,9 @@ const connect_page = {
     <br>
     <div v-for="(user, index) in users" :key="index" class="workshop-card">
       <h2>{{ user[1] }}</h2>
+      
       <p>{{ user[2] }}</p>
-      <p>{{ user[3] }}</p>
-      <button class="more-info-button" @click="showConnectDetails(user)">Connect</button>
+      <button class="more-info-button" @click="showConnectDetails(user)">More Info</button>
     </div>
 
     <!-- Add more workshop cards here -->
@@ -520,6 +521,7 @@ created() {
             const connectData = await response.json();
             this.users = connectData.users;
             console.log(connectData)
+            
             if (connectData.users.length==0){
               console.log(this.users)
               swal.fire({
@@ -566,15 +568,32 @@ created() {
       }
 
     },
-      showConnectDetails(workshop) {
+      showConnectDetails(profile) {
+      
+
       Swal.fire({
-        title: workshop[1],
+        title: profile[1],
         html: `
-          <p>${workshop[2]}</p>
-          <p>Linkedin: ${workshop[3]}</p>
+          <p>${profile[2]}</p>
+          <img id="recreatedImage" alt="Recreated Image" width="300" height="300">
+          <p>Linkedin: <a href="'/'+${profile[3]}">${profile[3]}</a></p>
         `,
         icon: 'info',
+        confirmButtonColor: '#36a3a3',
       });
+        if (profile[0] != null){
+            const recreatedImage = document.getElementById('recreatedImage');
+              const byteCharacters = profile[0].match(/.{1,2}/g);
+              const byteArray = new Uint8Array(byteCharacters.map(byte => parseInt(byte, 16)));
+              const blob = new Blob([byteArray], { type: 'image/jpeg' });
+              const imageUrl = URL.createObjectURL(blob);
+              
+              recreatedImage.src = imageUrl;
+            }
+            else{
+              
+              recreatedImage.src="/static/image/avatar.jpeg";
+            }
     },
   
  }
@@ -1203,7 +1222,7 @@ const Experience = {
               title: 'Experience Added Successfully',
               icon: 'success',
               showCancelButton: false,
-              confirmButtonColor: '#3085d6',
+              confirmButtonColor: '#36a3a3',
               cancelButtonColor: '#d33',
               confirmButtonText: 'Ok'
             }).then((result) => {
@@ -1251,7 +1270,7 @@ const Experience = {
               text: "Please login again",
               icon: 'warning',
               showCancelButton: false,
-              confirmButtonColor: '#3085d6',
+             confirmButtonColor: '#36a3a3',
               cancelButtonColor: '#d33',
               confirmButtonText: 'Ok'
             }).then((result) => {
@@ -1295,7 +1314,7 @@ const Experience = {
               text: "Please login again",
               icon: 'warning',
               showCancelButton: false,
-              confirmButtonColor: '#3085d6',
+              confirmButtonColor: '#36a3a3',
               cancelButtonColor: '#d33',
               confirmButtonText: 'Ok'
             }).then((result) => {

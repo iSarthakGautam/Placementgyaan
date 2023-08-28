@@ -158,7 +158,7 @@ class Student_Profile(Resource):
     data.name, data.Age, data.Bio, data.image_binary_code, data.current_status, data.qualification, data.Skills = args[
       "name"], args["age"], args["bio"], args["image_binary"], args[
         "current_status"], args["qualification"], args["skills"]
-    print(args['age'])
+
     db.session.commit()
 
     data_list = [
@@ -199,7 +199,11 @@ class Jobs_module(Resource):
              skills_required=str(args["skills_required"]),
              min_qualification=str(args["min_qualification"]),
              apply_link=args["apply_link"])
+
     db.session.add(a)
+    b = Notification(notification_title=args["job_title"],
+                     notification_message=args["job_description"])
+    db.session.add(b)
     db.session.commit()
 
     return {"message": "Added Successfully"}, 201
@@ -272,6 +276,8 @@ class Workshop_module(Resource):
                  workshop_mode_location=args["workshop_mode_location"],
                  workshop_date=args["workshop_date"])
     db.session.add(a)
+    b = Notification(notification_title=args["workshop_title"]+"  -"+args["workshop_date"],notification_message=args["workshop_description"])
+    db.session.add(b)
     db.session.commit()
 
     return {"message": "Workshop Added Successfully"}, 201
@@ -407,6 +413,9 @@ class Test_module(Resource):
                   time_limit_seconds=args["time_limit_seconds"])
 
     db.session.add(a)
+    b = Notification(notification_title=args["assesment_name"],
+                     notification_message=args["assesment_type"])
+    db.session.add(b)
     db.session.commit()
 
     return {"message": "Test Added Success"}, 201
@@ -425,7 +434,8 @@ class Test_module(Resource):
   def put(Resource):
     args = Test_module_parser.parse_args()
     if args["assesment_name"] == "" or args["assesment_type"] == "" or args[
-        "assesment_link"] == "" or args["assesment_id"] == 0:
+        "assesment_link"] == "" or args["assesment_id"] == "" or int(
+          int(args["assesment_id"])) < 1:
       return {
         "message":
         "Fields: assesment_name, assesment_type, assesment_link, can't be empty"
@@ -492,10 +502,10 @@ class Experience_module(Resource):
 
     a = experience(experience_type=args["experience_type"],
                    experience_title=args["experience_title"],
-                   roll_number=args["roll_number"],
                    url_or_blog=args["experience_description"])
 
     db.session.add(a)
+    b = Notification(notification_title=args["experience_title"]+" By Admin",notification_message=args["experience_description"])
     db.session.commit()
     return {"message": "Expereince Added Successfully"}, 200
 
@@ -573,6 +583,7 @@ class Past_test_module(Resource):
       pdf_link=args["paper_pdf_link"],
       owner_email=args["user_email"],
     )
+    b = Notification(notification_title=args["paper_name"]+" By admin",notification_message=args["paper_description"])
 
     db.session.add(a)
     db.session.commit()
@@ -657,11 +668,12 @@ class Student_shared_Experience_module(Resource):
         "It should be of video or Text type and title and description should not be empty"
       }, 400
     print()
-    a = Student_only_experience(experience_type=args["experience_type"],
-                                experience_title=args["experience_title"],
-                                email=args["email"],
-                                url_or_blog=args["experience_description"])
-    print(a.email)
+    a = Student_only_experience(experience_type=args["experience_type"], experience_title=args["experience_title"],email=args["email"],url_or_blog=args["experience_description"])
+
+    b = Notification(notification_title=args["experience_title"]+" By Student",notification_message=args["experience_description"])
+
+    db.session.add(a)
+    
     db.session.add(a)
     db.session.commit()
     return {"message": "Experience Added Successfully"}, 201

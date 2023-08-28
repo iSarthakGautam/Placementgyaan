@@ -16,6 +16,8 @@ const Home = {
         old_pass:"",
         new_pass:"",
         confirm_pass:"",
+        recreatedImageUrl:""
+        
         
         
       }
@@ -28,10 +30,11 @@ const Home = {
       <tr>
         <td>
           <h2>Personal Information</h2>
-      
-            <img src="../static/image/avatar.jpeg">
-
-        <h4>Edit</h4>
+          
+          <div >
+           <img id="recreatedImage" alt="Recreated Image">
+          </div>
+        <input type="file" id="imageInput" accept="image/*">
         </td>
         
         
@@ -87,8 +90,22 @@ const Home = {
             this.Age=data_array[2];
             this.linkedin_url=data_array[1];
             this.bio=data_array[3]
-            this.img_binary=data_array[4]
+            this.img_binary=data_array[4]    
+            binaryString = this.img_binary
             
+            if (binaryString != null){
+              const recreatedImage = document.getElementById('recreatedImage');
+              const byteCharacters = binaryString.match(/.{1,2}/g);
+              const byteArray = new Uint8Array(byteCharacters.map(byte => parseInt(byte, 16)));
+              const blob = new Blob([byteArray], { type: 'image/jpeg' });
+              const imageUrl = URL.createObjectURL(blob);
+              
+              recreatedImage.src = imageUrl;
+            }
+            else{
+              
+              recreatedImage.src="/static/image/avatar.jpeg";
+            }
             
           } 
             else if (response.status === 500) {
@@ -116,55 +133,126 @@ const Home = {
       }
 
     },
-      profile_update_button:  async function profile_update() {
-        console.log(this.Age)
-        
-      const put_data = {
-        image_binary: this.img_binary,
-        name: this.Name,
-        linked_in_url: this.linkedin_url,
-        age: this.Age,
-        bio: this.bio,        
-      };
+      profile_update_button: async function profile_update() {
+  const name = this.Name;
+  const linked_in_url = this.linkedin_url;
+  const age = this.Age;
+  const bio = this.bio;
+        let image_binary= this.img_binary;
+
+  const imageInput = document.getElementById('imageInput');
+  const selectedImage = imageInput.files[0];
+  let binary_string = '';
+  if (selectedImage) {
+    console.log("Inside if loop");
+    const reader = new FileReader();
+    
+    // Capture the reference to the Vue instance
+    const vm = this;
+
+    reader.onload = async function(event) {
+      const arrayBuffer = event.target.result;
+      const byteArray = new Uint8Array(arrayBuffer);
+
+      for (let i = 0; i < byteArray.length; i++) {
+        binary_string += byteArray[i].toString(16).padStart(2, '0');
+      }
+
+      // Assign to the Vue component's property
+      vm.img_binary = binary_string;
       
 
-     try {
-       
-      api_url="/api/profile/"+localStorage.getItem('email')
-       const jwtToken = localStorage.getItem('jwtToken');
+
+      const put_data = {
+        image_binary: binary_string,
+        name: name,
+        linked_in_url: linked_in_url,
+        age: age,
+        bio: bio,
+      };
+
+      try {
+        const api_url = "/api/profile/" + localStorage.getItem('email');
+        const jwtToken = localStorage.getItem('jwtToken');
         const response = await fetch(api_url, {
           method: 'PUT',
           headers: {
-             'Content-Type': 'application/json',
-              'Authorization': `Bearer ${jwtToken}`,
-            },
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${jwtToken}`,
+          },
           body: JSON.stringify(put_data),
         });
-     
-        if (response.status==200) {
-          
+
+        console.log(response.status);
+
+        if (response.status == 200) {
           Swal.fire({
             icon: 'success',
             title: 'Update Successful',
-            text: 'Reload if changes not visible'
 
-          })
+          });
+          this.fetch_profile_data();
         } else {
           Swal.fire({
             icon: 'error',
             title: 'Update Failed',
-
-          })
+          });
         }
       } catch (error) {
         Swal.fire({
-            icon: 'error',
-          title: "Something went wrong"
-          })
+          icon: 'error',
+          title: 'Something went wrong',
+        });
       }
-      
-    
-    },
+    };
+
+    reader.readAsArrayBuffer(selectedImage);
+  } else {
+    console.log('No image selected.');
+    const put_data = {
+        name: name,
+        linked_in_url: linked_in_url,
+        age: age,
+        bio: bio,
+        image_binary: image_binary,
+      };
+
+      try {
+        const api_url = "/api/profile/" + localStorage.getItem('email');
+        const jwtToken = localStorage.getItem('jwtToken');
+        const response = await fetch(api_url, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${jwtToken}`,
+          },
+          body: JSON.stringify(put_data),
+        });
+
+        console.log(response.status);
+
+        if (response.status == 200) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Update Successful',
+          });
+
+          
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Update Failed',
+          });
+        }
+      } catch (error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Something went wrong',
+        });
+      }
+  }
+},
+
       student_password_update_button:  async function student_password_update() {
       
       if (this.confirm_pass!=this.new_pass){
