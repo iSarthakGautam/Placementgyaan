@@ -8,7 +8,9 @@ const {createRouter,createWebHashHistory} = VueRouter
 const Home = { 
   data: function(){
       return {
-        notifications:[]
+        notifications:[],
+        notification_count:0,
+        notificationScroll:2
 
       }
       },
@@ -70,11 +72,55 @@ const Home = {
           </td>
         </tr>
       </table>
+
+      <div  @click="showMessageModal()" class="floating-button">
+  <img src="../static/image/contact_us.jpg" alt="Button Image">
+</div>
   `,
     created() {
     this.fetchNotifications();
   },
     methods:  {
+      showMessageModal() {
+      Swal.fire({
+        title: 'Report a Problem!',
+        input: 'text',
+        inputLabel: 'What technical issue are you facing?',
+        inputPlaceholder: 'Type your message here...',
+        showCancelButton: true,
+        confirmButtonColor: '#36a3a3',
+        confirmButtonText: 'Send',
+        preConfirm: (message) => {
+          this.postMessageToWebhook(message);
+        }
+      });
+    },
+    async postMessageToWebhook(message) {
+      const webhookUrl = 'https://chat.googleapis.com/v1/spaces/AAAAFcPesEQ/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=evZFfvAqh5-Tcj8uwwPUWXBASDP5zYynzqvv21Owkac';
+      const userEmail = localStorage.getItem('email');
+      const formattedMessage = `User Email: ${userEmail}\nProblem: ${message}`;
+      const postData = {
+        text: formattedMessage
+      };
+
+      try {
+        const response = await fetch(webhookUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(postData)
+        });
+
+        if (response.ok) {
+          Swal.fire('Message Sent', 'Your message has been sent successfully! We will get back to you soon', 'success');
+        } else {
+          Swal.fire('Error', 'Failed to send message. Please try again later.', 'error');
+        }
+      } catch (error) {
+        Swal.fire('Error', 'An error occurred while sending the message. Please try again later.', 'error');
+      }
+    },
       async fetchNotifications() {
       const jwtToken = localStorage.getItem('jwtToken');
 
@@ -103,7 +149,7 @@ const Home = {
               text: "Please login again",
               icon: 'warning',
               showCancelButton: false,
-              confirmButtonColor: '#3085d6',
+              confirmButtonColor: '#36a3a3',
               cancelButtonColor: '#d33',
               confirmButtonText: 'Ok'
             }).then((result) => {
@@ -221,7 +267,7 @@ const Jobs = {
       
       return this.jobs.filter(job => {
         const skillMatch = this.skillFilter === "" || job[5].toLowerCase().includes(skillFilterLower);
-        const locationMatch = this.locationFilter === "" || job[3].toLowerCase().includes(locationFilterLower)|| one;
+        const locationMatch = this.locationFilter === "" || job[3].toLowerCase().includes(locationFilterLower) || null;
         // You can add a similar condition for qualification if needed
         const qualificationMatch = this.qualificationFilter === "" || job[6].toLowerCase().includes(qualificationFilterLower);
         
@@ -266,7 +312,7 @@ created() {
               text: "Please login again",
               icon: 'warning',
               showCancelButton: false,
-              confirmButtonColor: '#3085d6',
+              confirmButtonColor: '#36a3a3',
               cancelButtonColor: '#d33',
               confirmButtonText: 'Ok'
             }).then((result) => {
@@ -298,16 +344,17 @@ created() {
       showJobDetails(job) {
       // Use SweetAlert2 to show more job details
       Swal.fire({
-        title: job[2],
+        title: job[1],
         html: `
-          <p>${job[1]}</p>
+          <p>${job[2]}</p>
           <p>Skills: ${job[5]}</p>
           <p>Location: ${job[3]}</p>
-          <p>Min Salary: ${job[4]}</p>
-          <p>Apply Link: ${job[7]}</p>
+          <p>Min Salary: Rs.${job[4]} (CTC)</p>
+          <p>Apply Link: <a href="${job[7]}">${job[7]}</a></p>
           <p>Min Qualification: ${job[6]}</p>
         `,
         icon: 'info',
+        confirmButtonColor: '#36a3a3'
       });
     },
   
@@ -337,8 +384,9 @@ const Workshops = {
     <div v-for="(workshop, index) in workshops" :key="index" class="workshop-card">
       <h2>{{ workshop[1] }}</h2>
       <p>{{ workshop[2] }}</p>
-      <p>Date: {{ workshop[4] }}</p>
-      <p><a :href="workshop[3]" target="_blank"> Register</a></p>
+      <p>Mode : {{workshop[3]}}
+      <p>Date: {{ workshop[5] }}</p>
+      <p><a :href="'//'+workshop[4]" target="_blank"> Register</a></p>
     </div>
 
     <!-- Add more workshop cards here -->
@@ -385,7 +433,7 @@ created() {
               text: "Please login again",
               icon: 'warning',
               showCancelButton: false,
-              confirmButtonColor: '#3085d6',
+              confirmButtonColor: '#36a3a3',
               cancelButtonColor: '#d33',
               confirmButtonText: 'Ok'
             }).then((result) => {
@@ -444,9 +492,9 @@ const connect_page = {
     <br>
     <div v-for="(user, index) in users" :key="index" class="workshop-card">
       <h2>{{ user[1] }}</h2>
+      
       <p>{{ user[2] }}</p>
-      <p>{{ user[3] }}</p>
-      <button class="more-info-button" @click="showConnectDetails(user)">Connect</button>
+      <button class="more-info-button" @click="showConnectDetails(user)">More Info</button>
     </div>
 
     <!-- Add more workshop cards here -->
@@ -475,6 +523,7 @@ created() {
             const connectData = await response.json();
             this.users = connectData.users;
             console.log(connectData)
+            
             if (connectData.users.length==0){
               console.log(this.users)
               swal.fire({
@@ -492,7 +541,7 @@ created() {
               text: "Please login again",
               icon: 'warning',
               showCancelButton: false,
-              confirmButtonColor: '#3085d6',
+              confirmButtonColor: '#36a3a3',
               cancelButtonColor: '#d33',
               confirmButtonText: 'Ok'
             }).then((result) => {
@@ -521,15 +570,32 @@ created() {
       }
 
     },
-      showConnectDetails(workshop) {
+      showConnectDetails(profile) {
+      
+
       Swal.fire({
-        title: workshop[1],
+        title: profile[1],
         html: `
-          <p>${workshop[2]}</p>
-          <p>Linkedin: ${workshop[3]}</p>
+          <p>${profile[2]}</p>
+          <img id="recreatedImage" alt="Recreated Image" width="300" height="300">
+          <p>Linkedin: <a href="'/'+${profile[3]}">${profile[3]}</a></p>
         `,
         icon: 'info',
+        confirmButtonColor: '#36a3a3',
       });
+        if (profile[0] != null){
+            const recreatedImage = document.getElementById('recreatedImage');
+              const byteCharacters = profile[0].match(/.{1,2}/g);
+              const byteArray = new Uint8Array(byteCharacters.map(byte => parseInt(byte, 16)));
+              const blob = new Blob([byteArray], { type: 'image/jpeg' });
+              const imageUrl = URL.createObjectURL(blob);
+              
+              recreatedImage.src = imageUrl;
+            }
+            else{
+              
+              recreatedImage.src="/static/image/avatar.jpeg";
+            }
     },
   
  }
@@ -1158,7 +1224,7 @@ const Experience = {
               title: 'Experience Added Successfully',
               icon: 'success',
               showCancelButton: false,
-              confirmButtonColor: '#3085d6',
+              confirmButtonColor: '#36a3a3',
               cancelButtonColor: '#d33',
               confirmButtonText: 'Ok'
             }).then((result) => {
@@ -1206,7 +1272,7 @@ const Experience = {
               text: "Please login again",
               icon: 'warning',
               showCancelButton: false,
-              confirmButtonColor: '#3085d6',
+             confirmButtonColor: '#36a3a3',
               cancelButtonColor: '#d33',
               confirmButtonText: 'Ok'
             }).then((result) => {
@@ -1250,7 +1316,7 @@ const Experience = {
               text: "Please login again",
               icon: 'warning',
               showCancelButton: false,
-              confirmButtonColor: '#3085d6',
+              confirmButtonColor: '#36a3a3',
               cancelButtonColor: '#d33',
               confirmButtonText: 'Ok'
             }).then((result) => {

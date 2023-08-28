@@ -16,7 +16,7 @@ class Student(db.Model):
   tests_attempted = db.Column(db.String)
   current_status = db.Column(db.String)
   email = db.Column(db.String, unique=True)
-  image_binary_code = db.Column(db.String)
+  image_binary_code = db.Column(db.Text)
 
 
 class Admin(db.Model):
@@ -41,10 +41,8 @@ class jobs(db.Model):
   job_description = db.Column(db.String, nullable=False)
   job_location = db.Column(db.String, nullable=False)
   min_salary = db.Column(db.Integer, nullable=False)
-  skills_require = db.Column(db.String,
-                             nullable=False)  # to be converted to list
-  min_qualification = db.Column(db.String,
-                                nullable=False)  # to be converted to list
+  skills_required = db.Column(db.String, nullable=False)  # to be converted to list
+  min_qualification = db.Column(db.String, nullable=False)  # to be converted to list
   apply_link = db.Column(db.String)
 
 
@@ -61,7 +59,6 @@ class experience(db.Model):
   experience_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
   experience_type = db.Column(db.String, nullable=False)
   experience_title = db.Column(db.String, nullable=False)
-  roll_number = db.Column(db.Integer)
   url_or_blog = db.Column(db.String)
 
 

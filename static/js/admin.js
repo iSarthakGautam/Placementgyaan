@@ -53,6 +53,18 @@ const Home = {
             </div>
           </td>
           
+          <td>
+            <div class="box experiences">
+              <div class="box-image">
+                <img src="../static/image/exp.png" alt="Experiences">
+              </div>
+              <div class="box-text">
+                <router-link to="experience" >Experience</router-link>
+              </div>
+            </div>
+          </td>
+          
+          
         </tr>
       </table>
     </div>
@@ -234,7 +246,7 @@ created() {
   html: `
 
     <input id="job_title" class="swal2-input" placeholder="Job Title">
-    <input id="job_decription" class="swal2-input" placeholder="Description">
+    <input id="job_description" class="swal2-input" placeholder="Description">
     <input id="min_salary" class="swal2-input" placeholder="Salary">
     <input id="job_location" class="swal2-input" placeholder="Location">
     <input id="apply_link" class="swal2-input" placeholder="Link">
@@ -247,7 +259,7 @@ created() {
   preConfirm: () => {
     return {
       job_title: document.getElementById('job_title').value,
-      job_decription: document.getElementById('job_decription').value,
+      job_description: document.getElementById('job_description').value,
       min_salary: document.getElementById('min_salary').value,
       job_location: document.getElementById('job_location').value,
       apply_link: document.getElementById('apply_link').value,
@@ -261,7 +273,7 @@ created() {
   if (result.isConfirmed) {
     const postData = {
       job_title: result.value.job_title,
-      job_decription: result.value.job_decription,
+      job_description: result.value.job_description,
       min_salary: result.value.min_salary,
       job_location: result.value.job_location,
       apply_link: result.value.apply_link,
@@ -319,7 +331,7 @@ created() {
     async delete_job_api_request(job_id) {
       const delete_data = {
         // user_email: this.user_email,
-        Job_id:job_id,
+        job_id:job_id,
       };
       
         api_url="/api/admin/jobs";
@@ -386,7 +398,7 @@ created() {
   html: `
 
     <input id="job_title" class="swal2-input" value=${job[1]}>
-    <input id="job_decription" class="swal2-input" value=${job[2]}>
+    <input id="job_description" class="swal2-input" value=${job[2]}>
     <input id="min_salary" class="swal2-input" value=${job[4]}>
     <input id="job_location" class="swal2-input" value=${job[3]}>
     <input id="apply_link" class="swal2-input" value=${job[7]}>
@@ -399,7 +411,7 @@ created() {
   preConfirm: () => {
     return {
       job_title: document.getElementById('job_title').value,
-      job_decription: document.getElementById('job_decription').value,
+      job_description: document.getElementById('job_description').value,
       min_salary: document.getElementById('min_salary').value,
       job_location: document.getElementById('job_location').value,
       apply_link: document.getElementById('apply_link').value,
@@ -412,9 +424,9 @@ created() {
 }).then((result) => {
   if (result.isConfirmed) {
     const postData = {
-      Job_id:job[0],
+      job_id:job[0],
       job_title: result.value.job_title,
-      job_decription: result.value.job_decription,
+      job_description: result.value.job_description,
       min_salary: result.value.min_salary,
       job_location: result.value.job_location,
       apply_link: result.value.apply_link,
@@ -464,7 +476,7 @@ created() {
  }
 
 }
-
+// Job component ends
 
 
 // workshop component.
@@ -802,6 +814,7 @@ created() {
  }
 
 }
+// workshop component ends
 
 // Assements component
 const assesment = { 
@@ -822,6 +835,7 @@ const assesment = {
       <div class="toggle-switch-bg"></div> 
     </div><h1>&nbsp Student Test</h1>
   </div>
+  <button class="more-info-button" @click="add_assesment(assesment)">Add Assesment</button>
 
    <div class="table-container">
       <table>
@@ -835,10 +849,10 @@ const assesment = {
         </thead>
         <tbody>
           <tr v-for="(test, index) in tests" :key="index">
+            <td>{{ test[3] }}</td>
             <td>{{ test[1] }}</td>
-            <td>{{ test[2] }}</td>
-            <td>{{ test[4] }}</td>
-            <td><button @click="give_test(test[3])" >Give</button></td>
+            <td>{{ test[5] }}</td>
+            <td><button class="more-info-button" @click="edit_assesment(test,index)">Edit</button><button class="delete-button" @click="delete_assesment(test[0])">Delete</button></td>
           </tr>
         
         </tbody>
@@ -915,28 +929,245 @@ created() {
       }
 
     },
-      give_test(url){
-        sessionStorage.setItem('test_url', url);
-        window.location.href = '/dashboard#/assesment/test'
-        
-      },
+      
     toggleFunction() {
        this.toggleState = !this.toggleState;
       console.log('Toggled: ', this.toggleState);
       if (this.toggleState) {
         console.log('Toggled ON');
         // Execute function when toggled ON
-        window.location.href = '/dashboard#/pyq';
+        console.log("hello")
+        window.location.href = '/admin_dashboard#/pyq';
       } else {
         console.log('Toggled OFF');
         // Execute function when toggled OFF
-        window.location.href = '/dashboard#/assesment';
+        window.location.href = '/admin_dashboard#/assesment';
       }
-    }
+    },
+
+      // Add assesment
+      add_assesment(assesment){
+      Swal.fire({
+  title: 'Add a Assement',
+  html: `
+
+    <input id="assesment_type" class="swal2-input" placeholder="Assesment Type">
+    <input id="assesment_name" class="swal2-input" placeholder="Assesmnt Name">
+    <input id="assesment_link" class="swal2-input" placeholder="Link">
+    <input id="deadline" class="swal2-input" placeholder="Deadline">
+    <input id="time_limit_seconds" class="swal2-input" placeholder="Duration">
+
+  `,
+  focusConfirm: false,
+  confirmButtonColor: '#36a3a3',
+  preConfirm: () => {
+    return {
+      assesment_type: document.getElementById('assesment_type').value,
+      assesment_name: document.getElementById('assesment_name').value,
+      assesment_link: document.getElementById('assesment_link').value,
+      deadline: document.getElementById('deadline').value,
+      time_limit_seconds: document.getElementById('time_limit_seconds').value,
+      
+      // user_email: localStorage.getItem('email'),
+    };
+  }
+}).then((result) => {
+  if (result.isConfirmed) {
+    const postData = {
+      assesment_type: result.value.assesment_type,
+      assesment_name: result.value.assesment_name,
+      assesment_link: result.value.assesment_link,
+      deadline: result.value.deadline,
+      time_limit_seconds: result.value.time_limit_seconds,
+    
+      // user_email: result.value.user_email
+    };
+    
+    const jwtToken = localStorage.getItem('jwtToken');
+    fetch('/api/admin/test', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${jwtToken}`,
+      },
+      body: JSON.stringify(postData)
+    })
+    .then(response => {
+      if (response.status === 201) {
+        this.fetchMocktests();
+        Swal.fire({
+              title: 'Assesment added Successfully',
+              icon: 'success',
+              showCancelButton: false,
+              confirmButtonColor: '#36a3a3',
+              confirmButtonText: 'Ok'
+            })
+      } 
+      else if((response.status === 200)){
+        Swal.fire({
+          title:"Assesment Already Their",
+          text:"Recheck Drive Link",
+          icon:"info",
+          confirmButtonColor: '#36a3a3',
+        })
+      }
+      else {
+        Swal.fire({
+          title:"Something Went Wrong",
+          text:"Try Again",
+          icon:"error",
+          confirmButtonColor: '#36a3a3',
+        })
+      }
+    })
+    .catch(error => {
+      console.error("Request failed:", error);
+    });
+  }
+});
+
+    },
+    // Deleting Assesment
+    async delete_assesment_api_request(assesment_id) {
+      const delete_data = {
+        // user_email: this.user_email,
+        assesment_id:assesment_id,
+      };
+      
+        api_url="/api/admin/test";
+        const jwtToken = localStorage.getItem('jwtToken');
+        await fetch(api_url, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${jwtToken}`,
+          },
+          body: JSON.stringify(delete_data),
+        }).then((response) => response.json()).then((data) => {
+
+          
+          if (data.message=="Test deleted successfully"){
+             this.fetchMocktests();
+          Swal.fire({
+              title: 'Test Deleted Successfully',
+              icon: 'success',
+              showCancelButton: false,
+              confirmButtonColor: '#36a3a3',
+              confirmButtonText: 'Ok'
+            })
+  
+          
+          }
+          else{
+            Swal.fire({
+              title: 'Something Went Wrong',
+              text:'Try Again',
+              icon: 'error',
+              confirmButtonColor: '#36a3a3'
+              
+            })
+          }
+        })
+      .catch(console.error);
+          return
+    },
+      delete_assesment(assesment_id){
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#36a3a3',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.delete_assesment_api_request(assesment_id);
+        }
+      })
+      
+    },
+      // Edit Assement
+        edit_assesment(assesment,index){
+   
+      Swal.fire({
+  title: 'Edit Assesment',
+  html: `
+
+    <input id="assesment_type" class="swal2-input" value=${assesment[1]}>
+    <input id="assesment_name" class="swal2-input" value=${assesment[3]}>
+    <input id="assesment_link" class="swal2-input" value=${assesment[4]}>
+    <input id="deadline" class="swal2-input" value=${assesment[5]}>
+    <input id="time_limit_seconds" class="swal2-input" value=${assesment[6]}>
+
+  `,
+  focusConfirm: false,
+  confirmButtonColor: '#36a3a3',
+  preConfirm: () => {
+    return {
+      assesment_type: document.getElementById('assesment_type').value,
+      assesment_name: document.getElementById('assesment_name').value,
+      assesment_link: document.getElementById('assesment_link').value,
+      deadline: document.getElementById('deadline').value,
+      time_limit_seconds: document.getElementById('time_limit_seconds').value,
+      
+      // user_email: localStorage.getItem('email'),
+    };
+  }
+}).then((result) => {
+  if (result.isConfirmed) {
+    const postData = {
+      assesment_id: assesment[0],
+      assesment_type: result.value.assesment_type,
+      assesment_name: result.value.assesment_name,
+      assesment_link: result.value.assesment_link,
+      deadline: result.value.deadline,
+      time_limit_seconds: result.value.time_limit_seconds,
+      // user_email: result.value.user_email
+    };
+    
+    const jwtToken = localStorage.getItem('jwtToken');
+    fetch('/api/admin/test', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${jwtToken}`,
+      },
+      body: JSON.stringify(postData)
+    })
+    .then(response => {
+      if (response.status === 200) {
+        this.fetchMocktests();
+        Swal.fire({
+              title: 'Assement Edited Successfully',
+              icon: 'success',
+              showCancelButton: false,
+              confirmButtonColor: '#36a3a3',
+              confirmButtonText: 'Ok'
+            })
+      } 
+
+      else {
+        Swal.fire({
+          title:"Something Went Wrong",
+          text:"Try Again",
+          icon:"error",
+          confirmButtonColor: '#36a3a3',
+        })
+      }
+    })
+    .catch(error => {
+      console.error("Request failed:", error);
+    });
+  }
+});
+ 
+  },
   
  }
 
 }
+// Assements component Ends
 
 
 
@@ -960,7 +1191,7 @@ const pyq_assesment = {
       <div class="toggle-switch-bg"></div> 
     </div><h1>&nbsp Student Test</h1>
   </div>
-   <button class="normal-button" @click="add_test"> Add Paper </button>
+   
    <div class="table-container">
       <table>
         <thead>
@@ -968,6 +1199,7 @@ const pyq_assesment = {
             <th>Name</th>
             <th>Description</th>
             <th>File</th>
+            <th>Posted by</th>
             <th>Action</th>
             
           </tr>
@@ -977,9 +1209,9 @@ const pyq_assesment = {
             <td>{{ test[1] }}</td>
             <td>{{ test[2] }}</td>
             <td><a :href="test[3]" target="_blank">PDF</a></td> 
-            <td><div v-if="user_email == test[4]"><button class="delete-button" @click="delete_test(test[0])" >Delete</button></div><div v-else>
-  ---
-</div></td> 
+            <td>{{test[4]}}</td>
+            
+            <td><button class="delete-button" @click="delete_test(test[0],test[4])" >Delete</button></div></td> 
             
           </tr>
         
@@ -1059,9 +1291,9 @@ created() {
 
     },
   
-    async delete_test_api_request(test_id) {
+    async delete_test_api_request(test_id,student_email) {
       const delete_data = {
-        user_email: this.user_email,
+        user_email: student_email,
         test_id:test_id,
       };
       
@@ -1105,7 +1337,7 @@ created() {
     },
 
       
-    delete_test(test_id){
+    delete_test(test_id,student_email){
       Swal.fire({
         title: 'Are you sure?',
         text: "You won't be able to revert this!",
@@ -1116,7 +1348,7 @@ created() {
         confirmButtonText: 'Yes, delete it!'
       }).then((result) => {
         if (result.isConfirmed) {
-          this.delete_test_api_request(test_id);
+          this.delete_test_api_request(test_id,student_email);
         }
       })
       
@@ -1195,24 +1427,354 @@ created() {
 });
 
     },
-      
+
+  // Admin Experiance sarts
+
+  // Admin Experiance Ends
     toggleFunction() {
        this.toggleState = !this.toggleState;
       console.log('Toggled: ', this.toggleState);
       if (this.toggleState) {
         console.log('Toggled ON');
         // Execute function when toggled ON
-        window.location.href = '/dashboard#/pyq';
+        window.location.href = '/admin_dashboard#/pyq';
       } else {
         console.log('Toggled OFF');
         // Execute function when toggled OFF
-        window.location.href = '/dashboard#/assesment';
+        window.location.href = '/admin_dashboard#/assesment';
       }
     }
   
  }
 
 }
+
+const Experience = { 
+   data: function(){
+      return {
+        student_experiences:[],
+        admin_experiences: [],
+        user_email: localStorage.getItem('email'),
+        
+
+      }
+      },
+    
+  template: `
+
+<table>
+<tr><br><br><br><br><br><br><h1>&nbsp</h1><br>
+</tr>
+<tr>
+  <td style="vertical-align: center;">
+  <div class="experience-cards">
+    <!-- Add Experience Card -->
+    <div class="experience-card add-card">
+      <div class="card-content">
+        <i class="fas fa-plus"></i>
+        <p @click="add_exp()">Add </p>
+      </div>
+    </div>
+  </td>
+  <td colspan=3> 
+  <!-- Your Experience Card -->
+  <div class="experience-card your-experience-card">
+    <h2>Your Experience</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Experience Title</th>
+          <th>Description</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr v-for="(exp, index) in student_experiences" :key="index" >
+        <template v-if="exp[4] == exp[4]">
+            <td>{{exp[2]}}</td>
+            <td v-if=" 'video' == exp[1]"> <a href="{{ exp[3] }}" target="_blank"> Click to watch video</td>
+            <td v-else>{{ exp[3] }}</td>
+
+            <td><button class="delete-button" @click="delete_my_exp(exp[0])">Delete</button> </td>
+
+      </template>
+          </tr>
+
+      </tbody>
+    </table>
+  </div>
+    
+  </td>
+  </tr>
+  <tr>
+  <td colspan=4>
+  <!-- Experience Table Card -->
+  <h2> Experiences</h2>
+    <div class="experience-card table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>title</th>
+            <th>Description</th>
+            <th> Posted by </th>
+          </tr>
+        </thead>
+           <tr v-for="(exp, index) in admin_experiences" :key="index">
+            <td>{{exp[[2]]}}</td>
+            <td v-if=" 'video' == exp[1]"> <a href="{{ exp[3] }}" target="_blank"> Click to watch video</td>
+            <td v-else>{{ exp[3] }}</td>
+            <td> Admin</td>
+          </tr>
+          <tr v-for="(exp, index) in student_experiences" :key="index">
+            <td>{{exp[[2]]}}</td>
+            <td v-if=" 'video' == exp[1]"> <a href="{{ exp[3] }}" target="_blank"> Click to watch video</td>
+            <td v-else>{{ exp[3] }}</td>
+            <td> Student</td>
+          </tr>
+          
+
+
+      </table>
+    </div>
+  </div>
+  
+  </td>
+</tr>
+</table>
+
+
+  `,
+  created() {
+    this.fetchAdminExperience();
+    this.fetchStudentExperience();
+  },
+    methods:  {
+      async delete_exp_api_request(exp_id) {
+      const delete_data = {
+        user_email: this.user_email,
+        experience_id:exp_id,
+      };
+      
+        api_url="/api/student/experiences";
+        const jwtToken = localStorage.getItem('jwtToken');
+        await fetch(api_url, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${jwtToken}`,
+          },
+          body: JSON.stringify(delete_data),
+        }).then((response) => response.json()).then((data) => {
+
+          
+          if (data.message=="Experience deleted"){
+             this.fetchStudentExperience();
+          Swal.fire({
+              title: 'Test Deleted Successfully',
+              icon: 'success',
+              showCancelButton: false,
+              confirmButtonColor: '#36a3a3',
+              confirmButtonText: 'Ok'
+            })
+            
+          
+          
+          }
+          else{
+            Swal.fire({
+              title: 'Something Went Wrong',
+              text:'Try Again',
+              icon: 'error',
+              confirmButtonColor: '#36a3a3'
+              
+            })
+          }
+        })
+      .catch(console.error);
+          return
+    },
+      delete_my_exp(exp_id){
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#36a3a3',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.delete_exp_api_request(exp_id);
+        }
+      })
+      
+    },
+      
+      add_exp(){
+ Swal.fire({
+  title: 'Submit Experience Details',
+  html: `
+    <p><strong>Note: All Fields are compulsory</strong></p>
+    <select id="experience_type" class="swal2-input" required>
+      <option value="blog">Blog</option>
+      <option value="video">Video</option>
+    </select>
+    <input id="experience_title" class="swal2-input" placeholder="Experience Title" required>
+    <input id="experience_description" class="swal2-input" placeholder="Experience Description" required>
+  `,
+  focusConfirm: false,
+  preConfirm: () => {
+    return {
+      experience_type: document.getElementById('experience_type').value,
+      experience_title: document.getElementById('experience_title').value,
+      email: localStorage.getItem("email"),
+      experience_description: document.getElementById('experience_description').value
+    };
+  }
+}).then((result) => {
+  if (result.isConfirmed) {
+    const jwtToken = localStorage.getItem('jwtToken');
+
+    const postData = {
+      experience_type: result.value.experience_type,
+      experience_title: result.value.experience_title,
+      email: result.value.email,
+      experience_description: result.value.experience_description
+    };
+
+    fetch('/api/student/experiences', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${jwtToken}`,
+      },
+      body: JSON.stringify(postData)
+    })
+    .then(response => {
+      if (response.status === 201) {
+        Swal.fire({
+              title: 'Experience Added Successfully',
+              icon: 'success',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Ok'
+            }).then((result) => {
+              if (result.isConfirmed) {
+                this.fetchStudentExperience();
+              }
+            })
+      } else {
+        console.log("Error");
+      }
+    })
+    .catch(error => {
+      console.error("Request failed:", error);
+    });
+  }
+});
+
+
+},
+
+      
+
+      
+      async fetchAdminExperience(){
+        const jwtToken = localStorage.getItem('jwtToken');
+      if (jwtToken) {
+        try {
+          const response = await fetch('/api/admin/experience', {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${jwtToken}`,
+            },
+          });
+
+          if (response.ok) {
+            const expData = await response.json();
+            this.admin_experiences= expData.Experiences;
+          }
+          else {
+            console.log("Some Error")
+          }
+          if (response.status === 500) {
+            Swal.fire({
+              title: 'Session Timed out',
+              text: "Please login again",
+              icon: 'warning',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Ok'
+            }).then((result) => {
+              if (result.isConfirmed) {
+                logout()
+              }
+            })
+            }
+    
+          
+         
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      }
+        
+      },
+
+      async fetchStudentExperience(){
+        const jwtToken = localStorage.getItem('jwtToken');
+        if (jwtToken) {
+        try {
+          const response = await fetch('/api/student/experiences', {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${jwtToken}`,
+            },
+          });
+
+          if (response.ok) {
+            const expData = await response.json();
+            console.log(expData)
+            this.student_experiences= expData.Experiences;
+          }
+          else {
+            console.log("Some Error")
+          }
+            if (response.status === 500) {
+            Swal.fire({
+              title: 'Session Timed out',
+              text: "Please login again",
+              icon: 'warning',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Ok'
+            }).then((result) => {
+              if (result.isConfirmed) {
+                logout()
+              }
+            })
+            }
+    
+          
+         
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      }
+        
+      },
+       
+        
+}     
+  
+  
+
+}
+
 
 
 
@@ -1223,7 +1785,11 @@ const router = createRouter({
     { path: '/', component: Home },
     { path: '/workshop', component: Workshops},
     { path: '/jobs', component: Jobs},
-    { path: '/assesment', component: assesment}
+    { path: '/assesment', component: assesment},
+    { path: '/pyq', component: pyq_assesment},
+    { path: '/pyq', component: pyq_assesment},
+    { path: '/experience', component: Experience},
+    
   
   ]
 });
@@ -1303,7 +1869,7 @@ function change_password(){
         } else {
           Swal.fire({
             title:'Password Change Failed',
-            text:'An error occurred while changing your password.', 
+            text:'Old Password is incorrect', 
             icon: 'error',
             confirmButtonColor: '#3085d6'
           });
