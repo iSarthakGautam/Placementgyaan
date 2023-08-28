@@ -159,6 +159,7 @@ const Jobs = {
   },
 created() {
     this.fetchJobs();
+  
   },
     methods:  {
       async fetchJobs() {
@@ -397,13 +398,13 @@ created() {
   title: 'Edit Job',
   html: `
 
-    <input id="job_title" class="swal2-input" value=${job[1]}>
-    <input id="job_description" class="swal2-input" value=${job[2]}>
-    <input id="min_salary" class="swal2-input" value=${job[4]}>
-    <input id="job_location" class="swal2-input" value=${job[3]}>
-    <input id="apply_link" class="swal2-input" value=${job[7]}>
-    <input id="skills_required" class="swal2-input" value=${job[5]}>
-    <input id="min_qualification" class="swal2-input" value=${job[6]}>
+    <input id="job_title" class="swal2-input" value='${job[1]}'>
+    <input id="job_description" class="swal2-input" value='${job[2]}'>
+    <input id="min_salary" class="swal2-input" value='${job[4]}'>
+    <input id="job_location" class="swal2-input" value='${job[3]}'>
+    <input id="apply_link" class="swal2-input" value='${job[7]}'>
+    <input id="skills_required" class="swal2-input" value='${job[5]}'>
+    <input id="min_qualification" class="swal2-input" value='${job[6]}'>
 
   `,
   focusConfirm: false,
@@ -474,6 +475,7 @@ created() {
   },
   
  }
+  
 
 }
 // Job component ends
@@ -741,11 +743,11 @@ created() {
   title: 'Edit Workshop',
   html: `
 
-    <input id="workshop_title" class="swal2-input" value=${workshop[1]}>
-    <input id="workshop_description" class="swal2-input" value=${workshop[2]}>
-    <input id="workshop_mode_location" class="swal2-input" value=${workshop[3]}>
-    <input id="workshop_registration_link" class="swal2-input" value=${workshop[4]}>
-    <input id="workshop_date" class="swal2-input" value=${workshop[5]}>
+    <input id="workshop_title" class="swal2-input" value='${workshop[1]}'>
+    <input id="workshop_description" class="swal2-input" value='${workshop[2]}'>
+    <input id="workshop_mode_location" class="swal2-input" value='${workshop[3]}'>
+    <input id="workshop_registration_link" class="swal2-input" value='${workshop[4]}'>
+    <input id="workshop_date" class="swal2-input" value='${workshop[5]}'>
 
   `,
   focusConfirm: false,
@@ -1094,11 +1096,11 @@ created() {
   title: 'Edit Assesment',
   html: `
 
-    <input id="assesment_type" class="swal2-input" value=${assesment[1]}>
-    <input id="assesment_name" class="swal2-input" value=${assesment[3]}>
-    <input id="assesment_link" class="swal2-input" value=${assesment[4]}>
-    <input id="deadline" class="swal2-input" value=${assesment[5]}>
-    <input id="time_limit_seconds" class="swal2-input" value=${assesment[6]}>
+    <input id="assesment_type" class="swal2-input" value='${assesment[1]}'>
+    <input id="assesment_name" class="swal2-input" value='${assesment[3]}'>
+    <input id="assesment_link" class="swal2-input" value='${assesment[4]}'>
+    <input id="deadline" class="swal2-input" value='${assesment[5]}'>
+    <input id="time_limit_seconds" class="swal2-input" value='${assesment[6]}'>
 
   `,
   focusConfirm: false,
@@ -1428,9 +1430,6 @@ created() {
 
     },
 
-  // Admin Experiance sarts
-
-  // Admin Experiance Ends
     toggleFunction() {
        this.toggleState = !this.toggleState;
       console.log('Toggled: ', this.toggleState);
@@ -1753,8 +1752,8 @@ const Experience = {
       <option value="blog">Blog</option>
       <option value="video">Video</option>
     </select>
-    <input id="experience_title" class="swal2-input" placeholder="Experience Title" value=${exp[2]} required>
-    <input id="experience_description" class="swal2-input" placeholder="Experience Description" value=${exp[3]} required>
+    <input id="experience_title" class="swal2-input" placeholder="Experience Title" value='${exp[2]}' required>
+    <input id="experience_description" class="swal2-input" placeholder="Experience Description" value='${exp[3]}' required>
   
 
   `,
