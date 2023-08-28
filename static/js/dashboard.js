@@ -350,7 +350,7 @@ created() {
           <p>Skills: ${job[5]}</p>
           <p>Location: ${job[3]}</p>
           <p>Min Salary: Rs.${job[4]} (CTC)</p>
-          <p>Apply Link: <a href="${job[7]}">${job[7]}</a></p>
+          <p>Apply Link: <a href="'//'+${job[7]}" targert="_blank">${job[7]}</a></p>
           <p>Min Qualification: ${job[6]}</p>
         `,
         icon: 'info',
@@ -578,7 +578,7 @@ created() {
         html: `
           <p>${profile[2]}</p>
           <img id="recreatedImage" alt="Recreated Image" width="300" height="300">
-          <p>Linkedin: <a href="'/'+${profile[3]}">${profile[3]}</a></p>
+          <p>Linkedin: <a href="'//'+${profile[3]}" target="_blank">${profile[3]}</a></p>
         `,
         icon: 'info',
         confirmButtonColor: '#36a3a3',
@@ -775,7 +775,7 @@ const pyq_assesment = {
           <tr v-for="(test, index) in tests" :key="index">
             <td>{{ test[1] }}</td>
             <td>{{ test[2] }}</td>
-            <td><a :href="test[3]" target="_blank">PDF</a></td> 
+            <td><a :href="'//'+test[3]" target="_blank">PDF</a></td> 
             <td><div v-if="user_email == test[4]"><button class="delete-button" @click="delete_test(test[0])" >Delete</button></div><div v-else>
   ---
 </div></td> 
@@ -1060,7 +1060,7 @@ const Experience = {
         <tr v-for="(exp, index) in student_experiences" :key="index" >
         <template v-if="exp[4] == exp[4]">
             <td>{{exp[2]}}</td>
-            <td v-if=" 'video' == exp[1]"> <a href="{{ exp[3] }}" target="_blank"> Click to watch video</td>
+            <td v-if=" 'video' == exp[1]"> <a href="'//'+{{ exp[3] }}" target="_blank"> Click to watch video</td>
             <td v-else>{{ exp[3] }}</td>
 
             <td><button class="delete-button" @click="delete_my_exp(exp[0])">Delete</button> </td>
@@ -1089,13 +1089,13 @@ const Experience = {
         </thead>
            <tr v-for="(exp, index) in admin_experiences" :key="index">
             <td>{{exp[[2]]}}</td>
-            <td v-if=" 'video' == exp[1]"> <a href="{{ exp[3] }}" target="_blank"> Click to watch video</td>
+            <td v-if=" 'video' == exp[1]"> <a href="'//'+{{ exp[3] }}" target="_blank"> Click to watch video</td>
             <td v-else>{{ exp[3] }}</td>
             <td> Admin</td>
           </tr>
           <tr v-for="(exp, index) in student_experiences" :key="index">
             <td>{{exp[[2]]}}</td>
-            <td v-if=" 'video' == exp[1]"> <a href="{{ exp[3] }}" target="_blank"> Click to watch video</td>
+            <td v-if=" 'video' == exp[1]"> <a href="'//'+{{ exp[3] }}" target="_blank"> Click to watch video</td>
             <td v-else>{{ exp[3] }}</td>
             <td> Student</td>
           </tr>
@@ -1187,8 +1187,8 @@ const Experience = {
       <option value="blog">Blog</option>
       <option value="video">Video</option>
     </select>
-    <input id="experience_title" class="swal2-input" placeholder="Experience Title" required>
-    <input id="experience_description" class="swal2-input" placeholder="Experience Description" required>
+    <input id="experience_title" class="swal2-input" placeholder="Experience OR Video Title" required>
+    <input id="experience_description" class="swal2-input" placeholder="Experience Description OR Video URL" required>
   `,
   focusConfirm: false,
   preConfirm: () => {
