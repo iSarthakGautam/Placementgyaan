@@ -200,7 +200,7 @@ class Jobs_module(Resource):
              apply_link=args["apply_link"])
 
     db.session.add(a)
-    b = Notification(notification_title=args["job_title"],
+    b = Notification(notification_title="New Job: "+args["job_title"],
                      notification_message=args["job_description"])
     db.session.add(b)
     db.session.commit()
@@ -414,7 +414,7 @@ class Test_module(Resource):
                   time_limit_seconds=args["time_limit_seconds"])
 
     db.session.add(a)
-    b = Notification(notification_title=args["assesment_name"],
+    b = Notification(notification_title="New Test:"args["assesment_name"],
                      notification_message=args["assesment_type"])
     db.session.add(b)
     db.session.commit()
