@@ -189,9 +189,10 @@ const Home = {
           Swal.fire({
             icon: 'success',
             title: 'Update Successful',
+            text:'Reload to see update profile picture'
 
           });
-          this.fetch_profile_data();
+          
         } else {
           Swal.fire({
             icon: 'error',
@@ -251,6 +252,7 @@ const Home = {
         });
       }
   }
+        this.fetch_profile_data();
 },
 
       student_password_update_button:  async function student_password_update() {
