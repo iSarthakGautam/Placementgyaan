@@ -51,7 +51,6 @@ Experience_module_parser = reqparse.RequestParser()
 Experience_module_parser.add_argument('experience_type')
 Experience_module_parser.add_argument('experience_title')
 Experience_module_parser.add_argument('experience_description')
-Experience_module_parser.add_argument('roll_number')
 Experience_module_parser.add_argument('experience_id')
 Experience_module_parser.add_argument('email')
 
@@ -276,7 +275,9 @@ class Workshop_module(Resource):
                  workshop_mode_location=args["workshop_mode_location"],
                  workshop_date=args["workshop_date"])
     db.session.add(a)
-    b = Notification(notification_title=args["workshop_title"]+"  -"+args["workshop_date"],notification_message=args["workshop_description"])
+    b = Notification(notification_title=args["workshop_title"] + "  -" +
+                     args["workshop_date"],
+                     notification_message=args["workshop_description"])
     db.session.add(b)
     db.session.commit()
 
@@ -480,8 +481,7 @@ class Experience_module(Resource):
     else:
       for i in data:
         exp_details = [
-          i.experience_id, i.experience_type, i.experience_title,
-          i.url_or_blog, i.roll_number
+          i.experience_id, i.experience_type, i.experience_title, i.url_or_blog
         ]
         Experiences.append(exp_details)
 
@@ -505,7 +505,8 @@ class Experience_module(Resource):
                    url_or_blog=args["experience_description"])
 
     db.session.add(a)
-    b = Notification(notification_title=args["experience_title"]+" By Admin",notification_message=args["experience_description"])
+    b = Notification(notification_title=args["experience_title"] + " By Admin",
+                     notification_message=args["experience_description"])
     db.session.commit()
     return {"message": "Expereince Added Successfully"}, 200
 
@@ -535,8 +536,8 @@ class Experience_module(Resource):
     if data is None:
       return {"message": "Experience not found"}, 404
 
-    data.experience_type, data.experience_title, data.roll_number, data.url_or_blog = args[
-      "experience_type"], args["experience_title"], args["roll_number"], args[
+    data.experience_type, data.experience_title, data.url_or_blog = args[
+      "experience_type"], args["experience_title"], args[
         "experience_description"]
 
     db.session.commit()
@@ -583,7 +584,8 @@ class Past_test_module(Resource):
       pdf_link=args["paper_pdf_link"],
       owner_email=args["user_email"],
     )
-    b = Notification(notification_title=args["paper_name"]+" By admin",notification_message=args["paper_description"])
+    b = Notification(notification_title=args["paper_name"] + " By admin",
+                     notification_message=args["paper_description"])
 
     db.session.add(a)
     db.session.commit()
@@ -668,12 +670,17 @@ class Student_shared_Experience_module(Resource):
         "It should be of video or Text type and title and description should not be empty"
       }, 400
     print()
-    a = Student_only_experience(experience_type=args["experience_type"], experience_title=args["experience_title"],email=args["email"],url_or_blog=args["experience_description"])
+    a = Student_only_experience(experience_type=args["experience_type"],
+                                experience_title=args["experience_title"],
+                                email=args["email"],
+                                url_or_blog=args["experience_description"])
 
-    b = Notification(notification_title=args["experience_title"]+" By Student",notification_message=args["experience_description"])
+    b = Notification(notification_title=args["experience_title"] +
+                     " By Student",
+                     notification_message=args["experience_description"])
 
     db.session.add(a)
-    
+
     db.session.add(a)
     db.session.commit()
     return {"message": "Experience Added Successfully"}, 201

@@ -159,6 +159,7 @@ const Jobs = {
   },
 created() {
     this.fetchJobs();
+  
   },
     methods:  {
       async fetchJobs() {
@@ -397,13 +398,13 @@ created() {
   title: 'Edit Job',
   html: `
 
-    <input id="job_title" class="swal2-input" value=${job[1]}>
-    <input id="job_description" class="swal2-input" value=${job[2]}>
-    <input id="min_salary" class="swal2-input" value=${job[4]}>
-    <input id="job_location" class="swal2-input" value=${job[3]}>
-    <input id="apply_link" class="swal2-input" value=${job[7]}>
-    <input id="skills_required" class="swal2-input" value=${job[5]}>
-    <input id="min_qualification" class="swal2-input" value=${job[6]}>
+    <input id="job_title" class="swal2-input" value='${job[1]}'>
+    <input id="job_description" class="swal2-input" value='${job[2]}'>
+    <input id="min_salary" class="swal2-input" value='${job[4]}'>
+    <input id="job_location" class="swal2-input" value='${job[3]}'>
+    <input id="apply_link" class="swal2-input" value='${job[7]}'>
+    <input id="skills_required" class="swal2-input" value='${job[5]}'>
+    <input id="min_qualification" class="swal2-input" value='${job[6]}'>
 
   `,
   focusConfirm: false,
@@ -474,6 +475,7 @@ created() {
   },
   
  }
+  
 
 }
 // Job component ends
@@ -741,11 +743,11 @@ created() {
   title: 'Edit Workshop',
   html: `
 
-    <input id="workshop_title" class="swal2-input" value=${workshop[1]}>
-    <input id="workshop_description" class="swal2-input" value=${workshop[2]}>
-    <input id="workshop_mode_location" class="swal2-input" value=${workshop[3]}>
-    <input id="workshop_registration_link" class="swal2-input" value=${workshop[4]}>
-    <input id="workshop_date" class="swal2-input" value=${workshop[5]}>
+    <input id="workshop_title" class="swal2-input" value='${workshop[1]}'>
+    <input id="workshop_description" class="swal2-input" value='${workshop[2]}'>
+    <input id="workshop_mode_location" class="swal2-input" value='${workshop[3]}'>
+    <input id="workshop_registration_link" class="swal2-input" value='${workshop[4]}'>
+    <input id="workshop_date" class="swal2-input" value='${workshop[5]}'>
 
   `,
   focusConfirm: false,
@@ -1094,11 +1096,11 @@ created() {
   title: 'Edit Assesment',
   html: `
 
-    <input id="assesment_type" class="swal2-input" value=${assesment[1]}>
-    <input id="assesment_name" class="swal2-input" value=${assesment[3]}>
-    <input id="assesment_link" class="swal2-input" value=${assesment[4]}>
-    <input id="deadline" class="swal2-input" value=${assesment[5]}>
-    <input id="time_limit_seconds" class="swal2-input" value=${assesment[6]}>
+    <input id="assesment_type" class="swal2-input" value='${assesment[1]}'>
+    <input id="assesment_name" class="swal2-input" value='${assesment[3]}'>
+    <input id="assesment_link" class="swal2-input" value='${assesment[4]}'>
+    <input id="deadline" class="swal2-input" value='${assesment[5]}'>
+    <input id="time_limit_seconds" class="swal2-input" value='${assesment[6]}'>
 
   `,
   focusConfirm: false,
@@ -1428,9 +1430,6 @@ created() {
 
     },
 
-  // Admin Experiance sarts
-
-  // Admin Experiance Ends
     toggleFunction() {
        this.toggleState = !this.toggleState;
       console.log('Toggled: ', this.toggleState);
@@ -1479,7 +1478,7 @@ const Experience = {
   <td colspan=3> 
   <!-- Your Experience Card -->
   <div class="experience-card your-experience-card">
-    <h2>Your Experience</h2>
+    <h2>Admin Experience</h2>
     <table>
       <thead>
         <tr>
@@ -1490,13 +1489,14 @@ const Experience = {
       </thead>
       <tbody>
 
-        <tr v-for="(exp, index) in student_experiences" :key="index" >
+        <tr v-for="(exp, index) in admin_experiences" :key="index" >
         <template v-if="exp[4] == exp[4]">
             <td>{{exp[2]}}</td>
             <td v-if=" 'video' == exp[1]"> <a href="{{ exp[3] }}" target="_blank"> Click to watch video</td>
             <td v-else>{{ exp[3] }}</td>
 
-            <td><button class="delete-button" @click="delete_my_exp(exp[0])">Delete</button> </td>
+            <td><button class="delete-button" @click="delete_admin_exp(exp[0])">Delete</button>
+            <button class="more-info-button" @click="edit_admin_exp(exp)">Edit</button></td>
 
       </template>
           </tr>
@@ -1510,7 +1510,7 @@ const Experience = {
   <tr>
   <td colspan=4>
   <!-- Experience Table Card -->
-  <h2> Experiences</h2>
+  <h2> Student Experiences</h2>
     <div class="experience-card table-card">
       <table>
         <thead>
@@ -1518,19 +1518,16 @@ const Experience = {
             <th>title</th>
             <th>Description</th>
             <th> Posted by </th>
+            <th> Action </th>
           </tr>
         </thead>
-           <tr v-for="(exp, index) in admin_experiences" :key="index">
-            <td>{{exp[[2]]}}</td>
-            <td v-if=" 'video' == exp[1]"> <a href="{{ exp[3] }}" target="_blank"> Click to watch video</td>
-            <td v-else>{{ exp[3] }}</td>
-            <td> Admin</td>
-          </tr>
+        
           <tr v-for="(exp, index) in student_experiences" :key="index">
             <td>{{exp[[2]]}}</td>
             <td v-if=" 'video' == exp[1]"> <a href="{{ exp[3] }}" target="_blank"> Click to watch video</td>
             <td v-else>{{ exp[3] }}</td>
-            <td> Student</td>
+            <td> {{ exp[4] }}</td>
+            <td><button class="delete-button" @click="delete_my_exp(exp[0])">Delete</button> </td>
           </tr>
           
 
@@ -1550,6 +1547,7 @@ const Experience = {
     this.fetchStudentExperience();
   },
     methods:  {
+      // deleting student experience starts
       async delete_exp_api_request(exp_id) {
       const delete_data = {
         user_email: this.user_email,
@@ -1610,7 +1608,72 @@ const Experience = {
       })
       
     },
+      // deleting student experiencee ends
+
+      // Deleting admin experience starts
+      async delete_admin_exp_api_request(exp_id) {
+      const delete_data = {
+        // user_email: this.user_email,
+        experience_id:exp_id,
+      };
       
+        api_url="/api/admin/experience";
+        const jwtToken = localStorage.getItem('jwtToken');
+        await fetch(api_url, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${jwtToken}`,
+          },
+          body: JSON.stringify(delete_data),
+        }).then((response) => response.json()).then((data) => {
+
+          
+          if (data.message=="Experience deleted"){
+             this.fetchAdminExperience();
+          Swal.fire({
+              title: 'Experience Deleted Successfully',
+              icon: 'success',
+              showCancelButton: false,
+              confirmButtonColor: '#36a3a3',
+              confirmButtonText: 'Ok'
+            })
+            
+          
+          
+          }
+          else{
+            Swal.fire({
+              title: 'Something Went Wrong',
+              text:'Try Again',
+              icon: 'error',
+              confirmButtonColor: '#36a3a3'
+              
+            })
+          }
+        })
+      .catch(console.error);
+          return
+    },
+      delete_admin_exp(exp_id){
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#36a3a3',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.delete_admin_exp_api_request(exp_id);
+        }
+      })
+      
+    },
+      // Deleting admin eperience ends
+
+      // Adding Admin experience
       add_exp(){
  Swal.fire({
   title: 'Submit Experience Details',
@@ -1628,7 +1691,6 @@ const Experience = {
     return {
       experience_type: document.getElementById('experience_type').value,
       experience_title: document.getElementById('experience_title').value,
-      email: localStorage.getItem("email"),
       experience_description: document.getElementById('experience_description').value
     };
   }
@@ -1639,11 +1701,10 @@ const Experience = {
     const postData = {
       experience_type: result.value.experience_type,
       experience_title: result.value.experience_title,
-      email: result.value.email,
       experience_description: result.value.experience_description
     };
 
-    fetch('/api/student/experiences', {
+    fetch('/api/admin/experience', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -1652,7 +1713,8 @@ const Experience = {
       body: JSON.stringify(postData)
     })
     .then(response => {
-      if (response.status === 201) {
+      if (response.status === 200) {
+        this.fetchAdminExperience()
         Swal.fire({
               title: 'Experience Added Successfully',
               icon: 'success',
@@ -1662,7 +1724,7 @@ const Experience = {
               confirmButtonText: 'Ok'
             }).then((result) => {
               if (result.isConfirmed) {
-                this.fetchStudentExperience();
+                this.fetchAdminExperience();
               }
             })
       } else {
@@ -1677,8 +1739,81 @@ const Experience = {
 
 
 },
+      // Adding admin exp ends
 
+      // Edit admin exp
+      edit_admin_exp(exp){
+   
+      Swal.fire({
+  title: 'Edit Experience',
+  html: `
+    <p><strong>Note: All Fields are compulsory</strong></p>
+    <select id="experience_type" class="swal2-input" required >
+      <option value="blog">Blog</option>
+      <option value="video">Video</option>
+    </select>
+    <input id="experience_title" class="swal2-input" placeholder="Experience Title" value='${exp[2]}' required>
+    <input id="experience_description" class="swal2-input" placeholder="Experience Description" value='${exp[3]}' required>
+  
+
+  `,
+  focusConfirm: false,
+  confirmButtonColor: '#36a3a3',
+  preConfirm: () => {
+    return {
+      experience_type: document.getElementById('experience_type').value,
+      experience_title: document.getElementById('experience_title').value,
+      experience_description: document.getElementById('experience_description').value,
       
+    };
+  }
+}).then((result) => {
+  if (result.isConfirmed) {
+    const postData = {
+      experience_id: exp[0],
+      experience_type: result.value.experience_type,
+      experience_title: result.value.experience_title,
+      experience_description: result.value.experience_description,
+    };
+    
+    const jwtToken = localStorage.getItem('jwtToken');
+    fetch('/api/admin/experience', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${jwtToken}`,
+      },
+      body: JSON.stringify(postData)
+    })
+    .then(response => {
+      if (response.status === 200) {
+        this.fetchAdminExperience();
+        Swal.fire({
+              title: 'Expereince Update Successfully',
+              icon: 'success',
+              showCancelButton: false,
+              confirmButtonColor: '#36a3a3',
+              confirmButtonText: 'Ok'
+            })
+      } 
+
+      else {
+        Swal.fire({
+          title:"Something Went Wrong",
+          text:"Try Again",
+          icon:"error",
+          confirmButtonColor: '#36a3a3',
+        })
+      }
+    })
+    .catch(error => {
+      console.error("Request failed:", error);
+    });
+  }
+});
+ 
+  },
+      // Edit admin exp ends
 
       
       async fetchAdminExperience(){
