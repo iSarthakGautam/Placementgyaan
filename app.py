@@ -73,5 +73,3 @@ api.add_resource(Experience_module, "/api/admin/experience")
 api.add_resource(Past_test_module, "/api/student/past_test")
 api.add_resource(Student_shared_Experience_module, "/api/student/experiences")
 
-if __name__ == '__main__':
-  app.run(debug=False, port='3000', host='0.0.0.0')
