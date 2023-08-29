@@ -7,7 +7,7 @@
 
 ### 🏠 [Homepage](https://placementgyaan.byteforce2023.repl.co/)
 
-### ✨ [Demo](https://placementgyaan.byteforce2023.repl.co/)
+### ✨ [Demo](https://drive.google.com/file/d/1VVYYDarE3SBNuCP5anqvTcLd7txRviy2/view?usp=sharing)
 
 ## Author
 
