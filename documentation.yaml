@@ -1,0 +1,1692 @@
+openapi: 3.0.3
+info:
+  title: Placement Gyaan Portal
+  version: 1.0.0.0
+  description: Placement Gyaan Portal is a cutting-edge online platform that revolutionizes the way students and job seekers approach their careers. With a comprehensive suite of resources, this portal offers expert advice on resume building, interview preparation, and skill enhancement. The portal also provides access to a wide range of job listings across various industries, connecting student with other students. Placement Gyaan Portal is the one-stop destination for all things career-related, empowering you to make informed decisions and succeed in your professional journey. 
+servers:
+  - url: https://placementgyaan.byteforce2023.repl.co/api
+    variables: {}
+    description: This is local host
+paths:
+  /login:
+    summary: This path is designed for the login to the Placement Portal
+    description: Student Login Page
+    post:
+      summary: Authentication of the Student as a User
+      description: To login for the user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Email:
+                  type: string
+                  example: test@mail.com
+                Password:
+                  type: string
+                  example: qwe
+      operationId: '1'
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              examples:
+                Success:
+                  value:
+                    jwt-token: asdjfh54dfa5
+                    message: Logged in successfully!
+        '401':
+          description: Unsuccessful login
+          content:
+            application/json:
+              examples:
+                Unauthorised:
+                  value:
+                    message: Login failed!
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              examples:
+                Internal server error:
+                  value:
+                    message: Something went wrong.
+  /signup:
+    summary: Signup for the Student as a User
+    description: Student sign up
+    post:
+      summary: Register a user with collage roll number
+      description: To signup for the user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Name:
+                  type: string
+                  example: test
+                roll_no:
+                  type: string
+                  example: 21f1000000
+                Email:
+                  type: string
+                  example: test@mail.com
+                Password:
+                  type: string
+                  example: qwe
+      operationId: '2'
+      responses:
+        '201':
+          description: User signed up successfully
+          content:
+            application/json:
+              examples:
+                Success:
+                  value:
+                    message: Signed up successfully!
+        '401':
+          description: Unsuccessful signup
+          content:
+            application/json:
+              examples:
+                Unauthorised:
+                  value:
+                    message: Sign up failed!
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              examples:
+                Internal server error:
+                  value:
+                    message: Something went wrong.
+  /admin_login:
+    summary: Login for the Admin as a User
+    description: Admin Login Page
+    post:
+      summary: Authentication of the Admin as a User
+      description: To Login Admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Password:
+                  type: string
+                  example: qwe
+      operationId: '3'
+      responses:
+        '200':
+          description: Admin logged in Successfully
+          content:
+            application/json:
+              examples:
+                Success:
+                  value:
+                    message: Login success
+                    access-token: asdjfh54dfa5
+        '401':
+          description: Admin logging Unsuccessful
+          content:
+            application/json:
+              examples:
+                Unauthorisd:
+                  value:
+                    message: Login failed!
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              examples:
+                Internal server error:
+                  value:
+                    message: Something went wrong.
+  /dashboard:
+    get:
+      security:
+        - x-access-token: []
+      summary: Get the user dashboard with the notifications
+      description: Shows the student dashboard
+      operationId: '4'
+      responses:
+        '200':
+          description: Successful in viewing dashboard page
+          content:
+            application/json:
+              examples:
+                Success in dashboard content:
+                  value:
+                    message: Success
+                    notifications:
+                      - 1st nottification
+                      - 2nd notification
+        '401':
+          description: Failed in viewing dashboard page
+          content:
+            application/json:
+              examples:
+                Unauthorised:
+                  value:
+                    message: Token missing or user not allowed to view content
+        '404':
+          description: Dashboard page was not found/ missing
+          content:
+            application/json:
+              examples:
+                Content Not Found:
+                  value:
+                    message: Content Not Found.
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              examples:
+                Internal server error:
+                  value:
+                    message: Something went wrong.
+  /profile/{email}:
+    get:
+      security:
+        - x-access-token: []
+      summary: Get the User profile details using Email ID
+      parameters:
+        - in: path
+          name: email
+          schema:
+            type: string
+          required: true
+          description: Email ID of the user to get the user profile details
+      description: Profile of the Student
+      operationId: '5'
+      responses:
+        '200':
+          description: Successful in getting student profile details
+          content:
+            application/json:
+              examples:
+                Success in profile content:
+                  value:
+                    message: Success
+                    data:
+                      - Name
+                      - Linkedin Url
+                      - Age
+                      - Bio
+                      - image_binary_code
+                      - current_status
+                      - qualification
+                      - skills
+        '401':
+          description: Unsuccessful in getting student profile details
+          content:
+            application/json:
+              examples:
+                Unauthorised:
+                  value:
+                    message: Token missing or user not allowed to view content
+        '404':
+          description: Profile page is not found/missing
+          content:
+            application/json:
+              examples:
+                Content Not Found:
+                  value:
+                    message: Data Not Found.
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              examples:
+                Internal server error:
+                  value:
+                    message: Something went wrong.
+    put:
+      security:
+        - x-access-token: []
+      summary: Update the Student Profile details using Email ID
+      description: To update the profile of the student
+      operationId: '6'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                image_binary_code:
+                  type: string
+                  example: "110101"
+                name:
+                  type: string
+                  example: test
+                Linkedin_url:
+                  type: string
+                  example: qwe.com
+                age:
+                  type: number
+                  example: 20
+                bio:
+                  type: string
+                  example: I am student
+                current_status:
+                  type: string
+                  example: student
+                qualification:
+                  type: string
+                  example: Bachelor
+                skills:
+                  type: string
+                  example: JAVA
+      parameters:
+        - in: path
+          name: email
+          schema:
+            type: string
+          required: true
+          description: Email ID of the user to get profile details
+      responses:
+        '200':
+          description: Successful in updating student profile details
+          content:
+            application/json:
+              examples:
+                Success in profile content:
+                  value:
+                    message: Success
+                    data:
+                      - Name
+                      - Linkedin Url
+                      - Age
+                      - Bio
+                      - image_binary_code
+                      - current_status
+                      - qualifications
+                      - skills
+        '401':
+          description: Unsuccessful in updating student profile details
+          content:
+            application/json:
+              examples:
+                Unauthorised:
+                  value:
+                    message: Token missing or user not allowed to view content
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              examples:
+                Internal server error:
+                  value:
+                    message: Something went wrong.
+  /jobs:
+    get:
+      security:
+        - x-access-token: []
+      summary: Get the job details
+      description: To get the details of the job
+      operationId: '7'
+      responses:
+        '200':
+          description: Successfully get the details of job profile
+          content:
+            application/json:
+              examples:
+                Jobs list and Infor:
+                  value:
+                    Message: Success
+                    jobs:
+                      - - job_id_1
+                        - job_decription
+                        - Job_name_1
+                        - Job_loc_1
+                        - Min_salary_1
+                        - Apply_link_1
+                        - skills_req_sep_by_coma
+                        - min_qualification
+                      - - job_id_2
+                        - Job_name_2
+                        - Job_loc_2
+                        - Min_salary_2
+                        - Apply_link_2
+                        - skills_req_sep_by_coma
+                        - min_qualification
+        '401':
+          description:  Unsuccessful in getting job profile details 
+          content:
+            application/json:
+              examples:
+                Unauthorised:
+                  value:
+                    message: Token missing or user not allowed to view content
+        '404':
+          description:  Job profile details is missing/not found
+          content:
+            application/json:
+              examples:
+                Content Not Found:
+                  value:
+                    message: Content Not Found.
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              examples:
+                Internal server error:
+                  value:
+                    message: Something went wrong.
+  /workshops:
+    get:
+      security:
+        - x-access-token: []
+      summary: Get the workshop details
+      description: To get the details of the workshop
+      operationId: '8'
+      responses:
+        '200': 
+          description: Successfully get the details of workshops
+          content:
+            application/json:
+              examples:
+                Jobs list and Infor:
+                  value:
+                    Message: Success
+                    workshops:
+                      - - workshop_id_1
+                        - workshop_name_1
+                        - workshop_mode_location
+                        - workshop_reg_link_1
+        '401':
+          description:  Unsuccessful in getting workshop details
+          content:
+            application/json:
+              examples:
+                Unauthorised:
+                  value:
+                    message: Token missing or user not allowed to view content
+        '404':
+          description:  Workshop details is missing/not found
+          content:
+            application/json:
+              examples:
+                Content Not Found:
+                  value:
+                    message: Content Not Found.
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              examples:
+                Internal server error:
+                  value:
+                    message: Something went wrong.
+  /change_password:
+    put:
+      security:
+        - x-access-token: []
+      summary: Change the profile password of the Student as a User
+      description: To change the profile password
+      operationId: '9'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Password:
+                  type: string
+                  example: qwe
+                New_Password:
+                  type: string
+                  example: testnew
+                Email:
+                  type: string
+                  example: test@mail.com
+      responses:
+        '200':
+          description: Password is changed successfully
+          content:
+            application/json:
+              examples:
+                Success in change password:
+                  value:
+                    message: Success
+        '401':
+          description: Unsuccessful in changing password
+          content:
+            application/json:
+              examples:
+                Unauthorised:
+                  value:
+                    message: Token missing or user not allowed to view content
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              examples:
+                Internal server error:
+                  value:
+                    message: Something went wrong.          
+  /admin/change_password:
+      put:
+        security:
+          - x-access-token: []
+        summary: Change the profile password of the Admin as a User
+        description: To change the profile password
+        operationId: '10'
+        requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Password:
+                    type: string
+                    example: test
+                  New_Password:
+                    type: string
+                    example: testnew
+        responses:
+          '200':
+            description: Password is changed successfully
+            content:
+              application/json:
+                examples:
+                  Success in change password:
+                    value:
+                      message: Success
+          '401':
+            description: Unsuccessful in changing password
+            content:
+              application/json:
+                examples:
+                  Unauthorised:
+                    value:
+                      message: Token missing or user not allowed to view content
+          '500':
+            description: Internal Server Error
+            content:
+              application/json:
+                examples:
+                  Internal server error:
+                    value:
+                      message: Something went wrong.    
+  /connect:
+      summary: Display other students in network with connection details
+      get:
+        security:
+          - x-access-token: []
+        summary: Get the details of the other students in network 
+        description: Provide the details of other students with profile picture
+        operationId: '11'
+        responses:
+          '200':
+            description: Successful in getting other student's profile
+            content:
+              application/json:
+                examples:
+                  Success in dashboard content:
+                    value:
+                      message: Success
+                      users:
+                        - - Binary_String_for_img_1
+                          - User name 1
+                          - Bio_1
+                          - Linked_in Link_1
+                        - - Binary_String_for_img_2
+                          - User name 2
+                          - Bio_2
+                          - Linked_in Link_2
+          '401':
+            description: Unsuccessful in getting other student's profile details
+            content:
+              application/json:
+                examples:
+                  Unauthorised:
+                    value:
+                      message: Token missing or user not allowed to view content
+          '404':
+            description: Other student's details are missing/ not found
+            content:
+              application/json:
+                examples:
+                  Content Not Found:
+                    value:
+                      message: Content Not Found.
+          '500':
+            description: Internal Server Error
+            content:
+              application/json:
+                examples:
+                  Internal server error:
+                    value:
+                      message: Something went wrong.
+  /admin/jobs:
+      summary: Post the details of Jobs
+      post:
+        security:
+          - x-access-token: []
+        summary: Post new job profile details
+        description: To post the details of new jobs
+        requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_title:
+                    type: string
+                    example: title
+                  job_description:
+                    type: string
+                    example: description
+                  min_salary:
+                    type: integer
+                    example: 100000
+                  job_location:
+                    type: string
+                    example: Bengaluru
+                  apply_link:
+                    type: string
+                    example: https://indeed.com
+                  skills_required:
+                    type: object
+                    example:
+                      - Java
+                      - sa
+                  min_qualification:
+                    type: object
+                    example:
+                      - Bachlors
+                      - ' BCA'
+        operationId: '12'
+        responses:
+          '201':
+            description: Successful in posting job profile details
+            content:
+              application/json:
+                examples:
+                  Success:
+                    value:
+                      message: Added  successfully!
+          '401':
+            description: Unsuccessful in posting job profile details
+            content:
+              application/json:
+                examples:
+                  Unauthorised:
+                    value:
+                      message: operation failed!
+          '500':
+            description: Internal Server Error
+            content:
+              application/json:
+                examples:
+                  Internal server error:
+                    value:
+                      message: Something went wrong.
+      get:
+        security:
+          - x-access-token: []
+        summary: Get the job details
+        operationId: ''
+        responses:
+          '200':
+            description: Successful in getting job profile details
+            content:
+              application/json:
+                examples:
+                  Success in dashboard content:
+                    value:
+                      message: Success
+                      jobs:
+                        - - job_id_1
+                          - job_description
+                          - Job_name_1
+                          - Job_loc_1
+                          - Min_salary_1
+                          - Apply_link_1
+                          - skills_req_sep_by_coma
+                          - min_qualification
+                        - - job_id_2
+                          - job_description
+                          - Job_name_2
+                          - Job_loc_2
+                          - Min_salary_2
+                          - Apply_link_2
+                          - skills_req_sep_by_coma
+                          - min_qualification
+          '401':
+            description: Unsuccessful in getting job profile details
+            content:
+              application/json:
+                examples:
+                  Unauthorised:
+                    value:
+                      message: Token missing or user not allowed to view content
+          '404':
+            description: The page is not found/ missing
+            content:
+              application/json:
+                examples:
+                  Content Not Found:
+                    value:
+                      message: Content Not Found.
+          '500':
+            description: Internal Server Error
+            content:
+              application/json:
+                examples:
+                  Internal server error:
+                    value:
+                      message: Something went wrong.
+      delete:
+        security:
+          - x-access-token: []
+        summary: Delete the job profile
+        description: To delete the job profile
+        operationId: '13'
+        responses:
+          '200':
+            description: Job Profile deleted successfully
+            content:
+              application/json:
+                examples:
+                  Success:
+                    value:
+                      message: Deleted successfully!
+          '401':
+            description: Unsuccessful in deleting job profile
+            content:
+              application/json:
+                examples:
+                  Unauthorised:
+                    value:
+                      message: Token missing or user not allowed to view content
+          '500':
+            description: Internal Server Error
+            content:
+              application/json:
+                examples:
+                  Internal server error:
+                    value:
+                      message: Something went wrong.
+        requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    example: 12
+      put:
+        security:
+          - x-access-token: []
+        summary: Edit the Job Profile details
+        description: To change the details in job profile
+        requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: integer
+                  job_title:
+                    type: string
+                    example: title
+                  job_description:
+                    type: string
+                    example: description
+                  min_salary:
+                    type: integer
+                    example: 100000
+                  job_location:
+                    type: string
+                    example: Bengaluru
+                  apply_link:
+                    type: string
+                    example: https://indeed.com
+                  skills_required:
+                    type: object
+                    example:
+                      - Java
+                      - sa
+                  min_qualification:
+                    type: object
+                    example:
+                      - Bachelors
+                      - ' BCA'
+        operationId: '14'
+        responses:
+          '200':
+            description: Successful in updating the job profile
+            content:
+              application/json:
+                examples:
+                  Success:
+                    value:
+                      message: Updated successfully!
+          '401':
+            description: Unsuccessful in updating the job profile
+            content:
+              application/json:
+                examples:
+                  Unauthorisd:
+                    value:
+                      message: operation failed!
+          '500':
+            description: Internal Server Error
+            content:
+              application/json:
+                examples:
+                  Internal server error:
+                    value:
+                      message: Something went wrong.
+  /admin/workshop:
+      post:
+        security:
+        - x-access-token: []
+        summary: Post the new workshop details
+        description: To post the details of new workshop
+        requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  workshop_title:
+                    type: string
+                    example: title
+                  workshop_description:
+                    type: string
+                    example: description
+                  workshop_mode_location:
+                    type: string
+                    example: online
+                  workshop_registration_link:
+                    type: string
+                    example: https://google_forms
+                  workshop_date:
+                    type: string
+                    example: "26-09-2023"
+        operationId: '15'
+        responses:
+          '201':
+            description: Successfully added new workshop details
+            content:
+              application/json:
+                examples:
+                  Success:
+                    value:
+                     message: Added  successfully!
+          '401':
+            description: Unsuccessful in adding new workshop details
+            content:
+              application/json:
+                examples:
+                  Unauthorisd:
+                    value:
+                      message: operation failed!
+          '500':
+            description: Internal Server Error
+            content:
+              application/json:
+                examples:
+                  Internal server error:
+                    value:
+                      message: Something went wrong.
+      get:
+        security:
+          - x-access-token: []
+        summary: Get the workshop details
+        description: To get the workshop details
+        operationId: '16'
+        responses:
+          '200':
+            description: Successful in getting workshop details
+            content:
+              application/json:
+                examples:
+                  Success in dashboard content:
+                    value:
+                      message: Success
+                      workshops:
+                        - - workshop_id_1
+                          - workshop_title
+                          - workshop_description_1
+                          - workshop_mode_location_1
+                          - workshop_link_1
+                          - workshop_date_1
+                        - - workshop_id_2
+                          - workshop_title
+                          - workshop_description_2
+                          - workshop_mode_location_2
+                          - workshop_link_2
+                          - workshop_date_2
+          '401':
+            description: Unsuccessful in getting workshop details
+            content:
+              application/json:
+                examples:
+                  Unauthorised:
+                    value:
+                      message: Token missing or user not allowed to view content
+          '404':
+            description: The page is missing/ not found
+            content:
+              application/json:
+                examples:
+                  Content Not Found:
+                    value:
+                      message: Content Not Found.
+          '500':
+            description: Internal Server Error
+            content:
+              application/json:
+                examples:
+                  Internal server error:
+                    value:
+                      message: Something went wrong.
+      delete:
+        security:
+          - x-access-token: []
+        summary: Delete the workshop details
+        description: To delete the workshop details
+        operationId: '17'
+        responses:
+          '200':
+            description: Workshop details deleted successfully
+            content:
+              application/json:
+                examples:
+                  Success:
+                    value:
+                      message: Deleted successfully!
+          '401':
+            description: Unsuccessful in deleting workshop details
+            content:
+              application/json:
+                examples:
+                  Unauthorised:
+                    value:
+                      message: Token missing or user not allowed to view content
+          '500':
+            description: Internal Server Error
+            content:
+              application/json:
+                examples:
+                  Internal server error:
+                    value:
+                      message: Something went wrong.
+        requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  workshop_id:
+                    type: string
+                    example: 12
+      put:
+        security:
+          - x-access-token: []
+        summary: Edit workshop details
+        description: To edit workshop details
+        operationId: '18'
+        requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  workshop_id:
+                    type: integer
+                  workshop_title:
+                    type: string
+                    example: title
+                  workshop_description:
+                    type: string
+                    example: description
+                  workshop_mode_location:
+                    type: string
+                    example: online
+                  workshop_registration_link:
+                    type: string
+                    example: https://google_forms
+                  workshop_date:
+                    type: string
+                    example: "26/09/2023"
+        responses:
+          '200':
+            description: Successfully updated workshop details
+            content:
+              application/json:
+                examples:
+                  Success:
+                    value:
+                      message: Updated  successfully!
+          '401':
+            description: Unsuccesful in updating workshop details
+            content:
+              application/json:
+                examples:
+                  Unauthorisd:
+                    value:
+                      message: Token missing or user not allowed to view content
+          '500':
+            description: Internal Server Error
+            content:
+              application/json:
+                examples:
+                  Internal server error:
+                    value:
+                      message: Something went wrong.                    
+  /admin/test:
+    post:
+      security:
+        - x-access-token: []
+      summary: Post new test on the Portal
+      description: To post a test
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                assesment_name:
+                  type: string
+                  example: python
+                assesment_type:
+                  type: string
+                  example: technical/aptitude
+                assesment_link:
+                  type: string
+                  example: test_link
+                deadline:
+                  type: string
+                  example: dd/mm/yyyy
+                time_limit_seconds:
+                  type: string
+                  example: "180 min"
+      responses:
+        '201':
+          description: Test created successfully
+          content:
+            application/json:
+              examples:
+                Success:
+                  value: 
+                    message: Added  successfully!
+        '401':
+          description: Unauthorised access
+          content: 
+            application/json:
+              examples:
+                Unauthorised:
+                  value:
+                    message: operation failed!
+        '500':
+          description : Internal server error
+          content:
+            application/json:
+              examples:
+                Internal server error:
+                  value:
+                    message: Something went wrong.
+    get:
+      security:
+        - x-access-token: []
+      summary: Get the test details
+      description: To get the details of all the tests
+      operationId: '19'
+      responses:
+        '200':
+          description: Fetch successfully.
+          content:
+            application/json:
+              examples:
+                Success in dashboard content:
+                  value:
+                    message: Success
+                    assesments:
+                      - - assesment_id_1
+                        - assesment_name_1
+                        - assesment_type_1
+                        - assesment_link_1
+                        - deadline_1
+                        - time_limit_1
+                      - - assesment_id_2
+                        - assesment_name_2
+                        - assesment_type_2
+                        - assesment_link_2
+                        - deadline_2
+                        - time_limit_2
+        '401':
+          description: Unauthorised access.
+          content:
+            application/json:
+              examples:
+                Unauthorised:
+                  value:
+                    message: Token missing or user not allowed to view content
+        '404':
+          description: Not found
+          content:
+            application/json:
+              examples:
+                Content Not Found:
+                  value:
+                    message: Content Not Found.
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              examples:
+                Internal server error:
+                  value:
+                    message: Something went wrong.
+        default:
+          description: Default error sample response
+    delete:
+      security:
+        - x-access-token: []
+      summary: Delete the test on the Portal
+      description: To delete the test on the portal
+      operationId: '20'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              examples:
+                Success:
+                  value:
+                    message: Deleted successfully!
+        '401':
+          description: Unauthorised access
+          content:
+            application/json:
+              examples:
+                Unauthorised:
+                  value:
+                    message: Login failed!
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              examples:
+                Internal server error:
+                  value:
+                    message: Something went wrong.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                assesment_id:
+                  type: string
+                  example: 12
+    put:
+      security:
+          - x-access-token: []
+      summary: Edit test details on Portal
+      description: To edit the details of test on portal
+      operationId: '21'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                assesment_id:
+                  type: integer
+                  example: 3
+                assesment_name:
+                  type: string
+                  example: Python Basics
+                assesment_type:
+                  type: string
+                  example: Technical
+                assesment_link:
+                  type: string
+                  example: test_link
+                deadline:
+                  type: string
+                  example: dd/mm/yyyy
+                time_limit_seconds:
+                  type: string
+                  example: "180 min"
+                
+      responses:
+        '200':
+          description: Ok.
+          content:
+            application/json:
+              examples:
+                Success:
+                  value:
+                    message: Added  successfully!
+        '401':
+          description: Unauthorised access.
+          content:
+            application/json:
+              examples:
+                Unauthorised:
+                  value:
+                    message: operation failed!
+        '500':
+          description: Internal server errror.
+          content:
+            application/json:
+              examples:
+                Internal server error:
+                  value:
+                    message: Something went wrong.
+  /admin/experience:
+    post:
+      security:
+        - x-access-token: []
+      summary: Post new experience
+      description: To post new experience details
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                experience_type:
+                  type: string
+                  example: video
+                experience_title:
+                  type: string
+                  example: description
+                experience_description:
+                  type: string
+                  example : http://www.youtube.com or lorem ipsum
+                roll_number:
+                  type: integer
+                  example: 0
+      operationId: '22'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              examples:
+                Success:
+                  value:
+                    message: Added  successfully!
+        '401':
+          description: Unauthorised access.
+          content:
+            application/json:
+              examples:
+                Unauthorised:
+                  value:
+                    message: operation failed!
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              examples:
+                Internal server error:
+                  value:
+                    message: Something went wrong.
+    get:
+      security:
+        - x-access-token: []
+      summary: Get details of all the experiences on portal
+      description: To get the details of experiences on portal
+      operationId: '23'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              examples:
+                Success in dashboard content:
+                  value:
+                    message: Success
+                    experiences:
+                      - - experience_id_1
+                        - experience_type_1
+                        - experience_title_1
+                        - experience_description1
+                      - - experience_id_2
+                        - experience_type_2
+                        - experience_title_2
+                        - experience_description2
+        '401':
+          description: Unauthorised error.
+          content:
+            application/json:
+              examples:
+                Unauthorised:
+                  value:
+                    message: Token missing or user not allowed to view content
+        '404':
+          description: Not found.
+          content:
+            application/json:
+              examples:
+                Content Not Found:
+                  value:
+                    message: Content Not Found.
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              examples:
+                Internal server error:
+                  value:
+                    message: Something went wrong.
+        default:
+          description: Default error sample response
+    delete:
+      security:
+        - x-access-token: []
+      summary: Delete the experience on portal
+      description: To delete the experience on portal
+      operationId: '24'
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              examples:
+                Success:
+                  value:
+                    message: Deleted successfully!
+        '401':
+          description: Unauthorised access.
+          content:
+            application/json:
+              examples:
+                Unauthorisd:
+                  value:
+                    message: Login failed!
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              examples:
+                Internal server error:
+                  value:
+                    message: Something went wrong.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                experience_id:
+                  type: string
+                  example: 12
+    put:
+      security:
+          - x-access-token: []
+      summary: Edit experience on portal
+      description: To edit experiences on portal
+      operationId: '25'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                experience_id:
+                  type: integer
+                experience_type:
+                  type: string
+                  example: type
+                experience_title:
+                  type: string
+                  example: title
+                experience_description:
+                  type: string
+                  example: description
+                
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              examples:
+                Success:
+                  value:
+                    message: Added  successfully!
+        '401':
+          description: Unauthorised access
+          content:
+            application/json:
+              examples:
+                Unauthorisd:
+                  value:
+                    message: operation failed!
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              examples:
+                Internal server error:
+                  value:
+                    message: Something went wrong.
+  /test:
+    get:
+      security:
+        - x-access-token: []
+      summary: Get the details of test
+      description: Get test details
+      operationId: '26'
+      responses:
+        '200':
+          description: To get the details of test
+          content:
+            application/json:
+              examples:
+                Success in test contents:
+                  value:
+                    message: Success
+                    tests:
+                      - - test_id_1
+                        - test_name_1
+                        - test_type_1
+                        - form_url_1
+                      - - test_id_2
+                        - test_name_2
+                        - test_type_2
+                        - form_url_2
+        '401':
+          description: Unauthorised access.
+          content:
+            application/json:
+              examples:
+                Unauthorised:
+                  value:
+                    message: Login failed!
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              examples:
+                Internal server error:
+                  value:
+                    message: Something went wrong.
+  /student/past_test:
+    get:
+      security:
+        - x-access-token: []
+      summary: 'Fetch all past test papers'
+      description: 'This is to fetch all past test paper'
+      operationId: ''
+      responses:
+        '200':
+          description:  All past test fetched succesfully
+          content:
+            application/json:
+              examples:
+                Success in test contents:
+                  value:
+                    message: Success
+                    tests:
+                      - - test_id_1
+                        - test_name_1
+                        - test_desc_1
+                        - pdf_link_1
+                        - email_url_1
+                      - - test_id_2
+                        - test_name_2
+                        - test_desc_2
+                        - pdf_link_2
+                        - email_url_2
+        '401':
+          description: Unauthorized Access
+          content:
+            application/json:
+              examples:
+                Unauthorised:
+                  value:
+                    message: Fetch failed!
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              examples:
+                Internal server error:
+                  value:
+                    message: Something went wrong.
+        default:
+          description: Default error sample response
+    post:
+      security:
+        - x-access-token: []
+      summary: 'Create a new test paper'
+      description: 'This is to create a new test paper'
+      operationId: '27'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                paper_name:
+                  type: string
+                  example: example_paper
+                paper_description:
+                  type: string
+                  example: example_description
+                paper_pdf_link:
+                  type: string
+                  example: drive.google.com
+                user_email:
+                  type: string
+                  example: test.mail
+      responses:
+        '201':
+          description: Past_test posted successfully
+          content:
+            application/json:
+              examples:
+                Success:
+                  value:
+                    message: Post successful
+        '401':
+          description: Unauthorized Access
+          content:
+            application/json:
+              examples:
+                Unauthorisd:
+                  value:
+                    message: Post failed!
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              examples:
+                Internal server error:
+                  value:
+                    message: Something went wrong.
+    delete:
+      security:
+        - x-access-token: []
+      summary: 'Delete a test paper'
+      description: 'It is to delete a test paper'
+      operationId: ''
+      responses:
+        '200':
+          description: Paper Deletion Successfull
+          content:
+            application/json:
+              examples:
+                Success:
+                  value:
+                    message: Deleted successfully!
+        '404':
+          description: Unauthorized Access
+          content:
+            application/json:
+              examples:
+                Unauthorisd:
+                  value:
+                    message: Not found!
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              examples:
+                Internal server error:
+                  value:
+                    message: Something went wrong.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: test@mail.com
+                test_id:
+                  type: string
+                  example: 1
+  /student/experiences:
+    get:
+      security:
+        - x-access-token: []
+      summary: 'Get all the experinces listed'
+      description: 'It is to get all the experinces listed anonymously, yet be available for other functions'
+      operationId: '28'
+      responses:
+        '200':
+          description: All experiences fetched succesfully
+          content:
+            application/json:
+              examples:
+                Success in test contents:
+                  value:
+                    message: Success
+                    experiences:
+                      - - exp_id_1
+                        - exp_name_1
+                        - exp_desc_1
+                        - email_1
+                      - - exp_id_2
+                        - exp_name_2
+                        - exp_desc_2
+                        - email_2
+        '401':
+          description: Unauthorized Access
+          content:
+            application/json:
+              examples:
+                Unauthorisd:
+                  value:
+                    message: Fetch failed!
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              examples:
+                Internal server error:
+                  value:
+                    message: Something went wrong.
+    post:
+      security:
+        - x-access-token: []
+      summary: 'Add blog experiences'
+      description: 'To add blog experiences given its name, description and user email (the one who put that)'
+      operationId: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                experience_type:
+                  type: string
+                  example: blog
+                experience_title:
+                  type: string
+                  example: example_title
+                user_email:
+                  type: string
+                  example: test.mail
+      responses:
+        '201':
+          description: Experience Addition Successfull
+          content:
+            application/json:
+              examples:
+                Success:
+                  value:
+                    message: New experience added successfully
+        '401':
+          description: Unauthorized Access
+          content:
+            application/json:
+              examples:
+                Unauthorisd:
+                  value:
+                    message: Post failed!
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              examples:
+                Internal server error:
+                  value:
+                    message: Something went wrong.
+    delete:
+      security:
+        - x-access-token: []
+      summary: Delete blog experiences
+      description: To delete blog experiences by checking authorised user and experience id
+      operationId: '29'
+      responses:
+        '200':
+          description: Experience Deletion Successful
+          content:
+            application/json:
+              examples:
+                Success:
+                  value:
+                    message: Deleted successfully!
+        '404':
+          description: Page not found
+          content:
+            application/json:
+              examples:
+                Unauthorisd:
+                  value:
+                    message: Not found!
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              examples:
+                Internal server error:
+                  value:
+                    message: Something went wrong.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_email:
+                  type: string
+                  example: test@mail.com
+                experience_id:
+                  type: string
+                  example: exp_id_1
+components:
+  securitySchemes:
+    x-access-token:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
