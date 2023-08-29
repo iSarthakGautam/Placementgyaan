@@ -21,10 +21,8 @@ Contributions, issues and feature requests are welcome!
 
 Feel free to check [issues page](https://github.com/iSarthakGautam/Placementgyaan/issues). You can also take a look at the [contributing guide](https://github.com/iSarthakGautam/Placementgyaan).
 
-## Show your support
+## Run App locally
 
-Give a ⭐️ if this project helped you!
+To run the app locally, please install requirements.txt and run main.py using python3.
 
-
-***
-_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
+Note: For local runs, their might be CSS/ Images issues due to relative references.
