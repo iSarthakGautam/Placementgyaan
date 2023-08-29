@@ -42,17 +42,14 @@ def login_func():
 
 
 @app.route("/dashboard")
-# @jwt_required()
 def student_profile_func():
   return render_template("dashboard.html")
 
 @app.route("/profile")
-# @jwt_required()
 def dashboard_func():
   return render_template("profile.html")
 
 @app.route("/admin_dashboard")
-# @jwt_required()
 def admin_dash_func():
   return render_template("admin.html")
 
