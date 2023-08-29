@@ -200,7 +200,7 @@ class Jobs_module(Resource):
              apply_link=args["apply_link"])
 
     db.session.add(a)
-    b = Notification(notification_title="New Job: "+args["job_title"],
+    b = Notification(notification_title="New Job: " + args["job_title"],
                      notification_message=args["job_description"])
     db.session.add(b)
     db.session.commit()
